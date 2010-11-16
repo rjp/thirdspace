@@ -30,6 +30,6 @@ All messages in folder XYZ
 Details of message XYZ
 
 ## POST /message
-{ "subject": "X", "body": "Y", "parentid": "Z" }
+  { "subject": "X", "body": "Y", "parentid": "Z" }
 
 Create a new message. New thread if Z is a folder, follow up if Z is a message (mw: is having one field change purpose depending on context stupid?)
