@@ -9,19 +9,19 @@ All calls return JSON and must be authenticated with HTTP authentication.
 You recieve:
         { "folder": { "id":"A", "name":"B", "unread":"C" } "folder": { "id":"D", "name":"E", "unread":"F" } }
 
-Subscribed folders with unread messages
+Subscribed folders with unread messages. This will always be a flat structure.
 
 ## GET /folders/subscribed
 You recieve:
-        { "folder": { "id":"A", "name":"B", "unread":"C" } "folder": { "id":"D", "name":"E"  "folder": { "id":"G", "name":"H" } } }
+        { "folder": { "id":"A", "name":"B", "unread":"C" } "folder": { "id":"D", "name":"E"} } }
 
-Subscribed folders (both unread and read)
+Subscribed folders (both unread and read). This will always be a flat structure.
 
 ## GET /folders/all
 You recieve:
-        { "folder": { "id":"A", "name":"B", "unread":"C" } "folder": { "id":"D", "name":"E", "unread":"F" } }
+        { "folder": { "id":"A", "name":"B", "unread":"C" } "folder": { "id":"D", "name":"E", "unread":"F" "folder": { "id":"G", "name":"H" } }
 
-All folders you can access
+All folders you can access. This may be a tree structure.
 
 ## GET /folder/XYZ
 You recieve:
@@ -34,18 +34,18 @@ Subscribe to folder XYZ
 
 ## GET /messages/XYZ
 You recieve:
-        { "message": { "id":"A", "subject":"B", "from":"C", "to":"D", "body":"E" "message": { "id":"F", "subject":"G", "from":"H", "to":"I", "body":"J" } } }
+        { "message": { "id":"A", "subject":"B", "from":"C", "to":"D", "body":"E" } "message": { "id":"F", "subject":"G", "from":"H", "to":"I", "body":"J" } }
 
-Unread messages in folder XYZ
+Unread messages in folder XYZ. This will be a flat structure.
 
 ## GET /messages/XYZ/all
         { "message": { "id":"A", "subject":"B", "from":"C", "to":"D", "body":"E" "message": { "id":"F", "subject":"G", "from":"H", "to":"I", "body":"J" } } }
 
-All messages in folder XYZ
+All messages in folder XYZ. This may be a tree structure.
 
 ## GET /message/XYZ
 You recieve:
-        { "subject": "W", "body": "X", "folderid": "Y", "parentid": "Z" }
+        { "subject": "A", "body": "B", "folderid": "C", "parentid": "D" }
 
 Details of message XYZ
 
@@ -63,4 +63,4 @@ You send:
 You recieve:
         { "messageid": "B" }
 
-Reply to message XYZ. To and subject default to the message you are replying to.
+Reply to message XYZ. To and subject default to the message you are plying to.
