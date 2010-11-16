@@ -1,12 +1,12 @@
 UA3 Spec
---------
+========
 
 UA3 presents a simple HTTP interface for reading and posting messages.
 
 All calls return JSON and must be authenticated with HTTP authentication.
 
-Reading Messages
-================
+Message Functions
+-----------------
 
 # GET /folders
 subscribed folders
@@ -23,3 +23,6 @@ GET /messages/XYZ           get all messages in folder XYZ  GET /messages/XYZ/un
 
 GET /message/1234           get a single message  POST /message               post a message. New thread in folder if ID is a folder, follow up if ID is a message
 { subject: X, body: Y, replyid: ID }
+
+User Functions
+--------------
