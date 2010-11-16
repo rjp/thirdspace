@@ -10,7 +10,7 @@ All calls return JSON and must be authenticated with HTTP authentication.
 Subscribed folders with unread messages.
 
 You recieve:
-        { "folder": { "id":"A", "name":"B", "unread":"C" } "folder": { "id":"D", "name":"E", "unread":"F" } }
+        { "folder": { "id":"A", "name":"B", "unread":"C" }, "folder": { "id":"D", "name":"E", "unread":"F" } }
 
 This will always be a flat structure.
 
@@ -18,7 +18,7 @@ This will always be a flat structure.
 Subscribed folders (both unread and read).
 
 You recieve:
-        { "folder": { "id":"A", "name":"B", "unread":"C" } "folder": { "id":"D", "name":"E"} } }
+        { "folder": { "id":"A", "name":"B", "unread":"C" }, "folder": { "id":"D", "name":"E"} } }
 
 This will always be a flat structure.
 
@@ -30,7 +30,7 @@ You recieve:
         {
           "folder": {
             "id":"A", "name":"B", "unread":"C"
-          }
+          },
           "folder": {
             "id":"D", "name":"E", "unread":"F"
             "folder": {
@@ -55,7 +55,7 @@ Unread messages in folder XYZ.
 
 You recieve:
         {
-          "message": { "id":"A", "subject":"B", "from":"C", "to":"D", "body":"E" }
+          "message": { "id":"A", "subject":"B", "from":"C", "to":"D", "body":"E" },
           "message": { "id":"F", "subject":"G", "from":"H", "to":"I", "body":"J" }
         }
 
@@ -67,10 +67,10 @@ All messages in folder XYZ.
 
         {
           "message": {
-            "id":"A", "subject":"B", "from":"C", "to":"D", "body":"E"
+            "id":"A", "subject":"B", "from":"C", "to":"D", "body":"E",
             "message": {
               "id":"F", "subject":"G", "from":"H", "to":"I", "body":"J"
-            }
+            },
             "message": {
               "id":"K", "subject":"L", "from":"M", "to":"N", "body":"O"
             }
