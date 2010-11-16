@@ -35,7 +35,7 @@ You recieve:
             "id":"D", "name":"E", "unread":"F"
             "folder": {
               "id":"G", "name":"H"
-             }
+            }
           }
         }
 
@@ -62,7 +62,17 @@ This will be a flat structure.
 
 All messages in folder XYZ.
 
-        { "message": { "id":"A", "subject":"B", "from":"C", "to":"D", "body":"E" "message": { "id":"F", "subject":"G", "from":"H", "to":"I", "body":"J" } } }
+        {
+          "message": {
+            "id":"A", "subject":"B", "from":"C", "to":"D", "body":"E"
+            "message": {
+              "id":"F", "subject":"G", "from":"H", "to":"I", "body":"J"
+            }
+            "message": {
+              "id":"K", "subject":"L", "from":"M", "to":"N", "body":"O"
+            }
+          }
+        }
 
 This may be a tree structure.
 
