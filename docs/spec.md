@@ -32,7 +32,7 @@ You recieve:
             "id":"A", "name":"B", "unread":"C"
           },
           "folder": {
-            "id":"D", "name":"E", "unread":"F"
+            "id":"D", "name":"E", "unread":"F",
             "folder": {
               "id":"G", "name":"H"
             }
