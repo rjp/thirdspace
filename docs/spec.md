@@ -1,18 +1,20 @@
-UA3 spec
+UA3 Spec
 --------
 
 UA3 presents a simple HTTP interface for reading and posting messages.
 
 All calls return JSON and must be authenticated with HTTP authentication.
 
-Reading messages
+Reading Messages
 ================
 
-#### GET /folders
+# GET /folders
 subscribed folders
-#### GET /folders/unread
+
+# GET /folders/unread
 subscribed folders with unread messages
-#### GET /folders/all
+
+# GET /folders/all
 all folders
 
 GET /folder/XYZ             details of folder XYZ  POST /folder/XYZ/subscribe  subscribe to folder XYZ
