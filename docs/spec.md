@@ -8,16 +8,12 @@ All calls return JSON and must be authenticated with HTTP authentication.
 Reading messages
 ================
 
-GET /folders                subscribed folders
-GET /folders/unread         subscribed folders with unread messages
+GET /folders                subscribed folders  GET /folders/unread         subscribed folders with unread messages
 GET /folders/all            all folders
 
-GET /folder/XYZ             details of folder XYZ
-POST /folder/XYZ/subscribe  subscribe to folder XYZ
+GET /folder/XYZ             details of folder XYZ  POST /folder/XYZ/subscribe  subscribe to folder XYZ
 
-GET /messages/XYZ           get all messages in folder XYZ
-GET /messages/XYZ/unread    get all unread messages in folder XYZ
+GET /messages/XYZ           get all messages in folder XYZ  GET /messages/XYZ/unread    get all unread messages in folder XYZ
 
-GET /message/1234           get a single message
-POST /message               post a message. New thread in folder if ID is a folder, follow up if ID is a message
+GET /message/1234           get a single message  POST /message               post a message. New thread in folder if ID is a folder, follow up if ID is a message
 { subject: X, body: Y, replyid: ID }
