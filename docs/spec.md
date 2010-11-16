@@ -54,7 +54,10 @@ Subscribe to folder XYZ
 Unread messages in folder XYZ.
 
 You recieve:
-        { "message": { "id":"A", "subject":"B", "from":"C", "to":"D", "body":"E" } "message": { "id":"F", "subject":"G", "from":"H", "to":"I", "body":"J" } }
+        {
+          "message": { "id":"A", "subject":"B", "from":"C", "to":"D", "body":"E" }
+          "message": { "id":"F", "subject":"G", "from":"H", "to":"I", "body":"J" }
+        }
 
 This will be a flat structure.
 
