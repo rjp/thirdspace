@@ -30,7 +30,7 @@ get all unread messages in folder XYZ
 get a single message
 
 ## POST /message
-post a message. New thread in folder if ID is a folder, follow up if ID is a message ### (mw: is this stupid?)
+post a message. New thread in folder if ID is a folder, follow up if ID is a message (mw: is having one field change purpose depending on context a stupid thing?)
 { subject: X, body: Y, replyid: ID }
 
 User Functions
