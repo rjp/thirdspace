@@ -28,11 +28,13 @@ All messages in folder XYZ
 
 ## GET /message/XYZ
 Details of message XYZ
+You recieve:
+        { "subject": "W", "body": "X", "folderid": "Y", "parentid": "Z" }
 
 ## POST /message
-You send
-        { "subject": "X", "body": "Y", "parentid": "Z" }
-You recieve
-        { "messageid": "X" }
+You send:
+        { "subject": "W", "body": "X", "parentid": "Y" }
+You recieve:
+        { "messageid": "Z" }
 
-Create a new message. New thread if Z is a folder, follow up if Z is a message (mw: is having one field change purpose depending on context stupid?)
+Create a new message. New thread if Y is a folder, follow up if Y is a message (mw: is having one field change purpose depending on context stupid?)
