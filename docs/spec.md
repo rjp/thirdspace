@@ -27,7 +27,17 @@ This will always be a flat structure.
 All folders you can access.
 
 You recieve:
-        { "folder": { "id":"A", "name":"B", "unread":"C" } "folder": { "id":"D", "name":"E", "unread":"F" "folder": { "id":"G", "name":"H" } }
+        {
+          "folder": {
+            "id":"A", "name":"B", "unread":"C"
+          }
+          "folder": {
+            "id":"D", "name":"E", "unread":"F"
+            "folder": {
+              "id":"G", "name":"H"
+             }
+          }
+        }
 
 This may be a tree structure.
 
