@@ -5,9 +5,6 @@ UA3 presents a simple HTTP interface for reading and posting messages.
 
 All calls return JSON and must be authenticated with HTTP authentication.
 
-Message Functions
------------------
-
 ## GET /folders
 Subscribed folders
 
@@ -36,6 +33,3 @@ Details of message XYZ
 { subject: X, body: Y, replyid: Z }
 
 Create a new message. New thread in folder if Z is a folder, follow up if Z is a message (mw: is having one field change purpose depending on context stupid?)
-
-User Functions
---------------
