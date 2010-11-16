@@ -26,7 +26,7 @@ This may be a tree structure.
 
 ## GET /folders/subscribed
 
-Subscribed folders (both unread and read).
+Subscribed folders (both read and unread).
 
 You recieve:
         { "folder": { "id":"A", "name":"B", "unread":"C" }, "folder": { "id":"D", "name":"E"} } }
@@ -35,7 +35,7 @@ This will always be a flat structure.
 
 ## GET /folders/unread
 
-Subscribed folders with unread messages.
+Subscribed folders (unread only).
 
 You recieve:
         { "folder": { "id":"A", "name":"B", "unread":"C" }, "folder": { "id":"D", "name":"E", "unread":"F" } }
