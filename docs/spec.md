@@ -9,7 +9,7 @@ All calls return JSON and must be authenticated with HTTP authentication.
 Subscribed folders with unread messages
 
 ## GET /folders/subscribed
-Subscribed folders (unread or not)
+Subscribed folders (both unread and read)
 
 ## GET /folders/all
 All folders you can access
@@ -32,10 +32,18 @@ You recieve:
 
 Details of message XYZ
 
-## POST /message
+## POST /folder/XYZ
 You send:
-        { "subject": "W", "body": "X", "parentid": "Y" }
+        { "subject": "A", "toid": "B", "body": "C" }
 You recieve:
-        { "messageid": "Z" }
+        { "messageid": "D" }
 
-Create a new message. New thread if Y is a folder, follow up if Y is a message (mw: is having one field change purpose depending on context stupid?)
+Create a message in folder XYZ.
+
+## POST /message/XYZ
+You send:
+        { "body": "C" }
+You recieve:
+        { "messageid": "D" }
+
+Reply to message XYZ. To and subject default to the message you are replying to.
