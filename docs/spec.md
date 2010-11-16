@@ -73,7 +73,7 @@ You recieve:
 
 ## POST /message/XYZ
 
-Reply to message XYZ. 
+Create a message in reply to message XYZ. 
 
 You send:
         { "body": "A" }
