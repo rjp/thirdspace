@@ -15,7 +15,7 @@ Subscribed folders
 Subscribed folders with unread messages
 
 ## GET /folders/all
-All folders
+All accessible folders
 
 ## GET /folder/XYZ
 Details of folder XYZ
@@ -24,10 +24,10 @@ Details of folder XYZ
 Subscribe to folder XYZ
 
 ## GET /messages/XYZ
-All messages in folder XYZ
+Unread messages in folder XYZ
 
-## GET /messages/XYZ/unread
-All unread messages in folder XYZ
+## GET /messages/XYZ/all
+All messages in folder XYZ
 
 ## GET /message/XYZ
 Details of message XYZ
@@ -35,7 +35,7 @@ Details of message XYZ
 ## POST /message
 { subject: X, body: Y, replyid: ID }
 
-Create a new message. New thread in folder if ID is a folder, follow up if ID is a message (mw: is having one field change purpose depending on context a stupid thing?)
+Create a new message. New thread in folder if ID is a folder, follow up if ID is a message (mw: is having one field change purpose depending on context stupid?)
 
 User Functions
 --------------
