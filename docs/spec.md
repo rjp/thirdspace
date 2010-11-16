@@ -42,8 +42,8 @@ Create a message in folder XYZ.
 
 ## POST /message/XYZ
 You send:
-        { "body": "C" }
+        { "body": "A" }
 You recieve:
-        { "messageid": "D" }
+        { "messageid": "B" }
 
 Reply to message XYZ. To and subject default to the message you are replying to.
