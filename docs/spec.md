@@ -27,9 +27,10 @@ Unread messages in folder XYZ
 All messages in folder XYZ
 
 ## GET /message/XYZ
-Details of message XYZ
 You recieve:
         { "subject": "W", "body": "X", "folderid": "Y", "parentid": "Z" }
+
+Details of message XYZ
 
 ## POST /message
 You send:
