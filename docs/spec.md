@@ -13,7 +13,7 @@ Subscribed folders with unread messages
 
 ## GET /folders/subscribed
 You recieve:
-        { "folder": { "id":"A", "name":"B", "unread":"C" } "folder": { "id":"D", "name":"E", "unread":"F" } }
+        { "folder": { "id":"A", "name":"B", "unread":"C" } "folder": { "id":"D", "name":"E"  "folder": { "id":"G", "name":"H" } } }
 
 Subscribed folders (both unread and read)
 
