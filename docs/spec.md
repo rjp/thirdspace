@@ -6,24 +6,41 @@ UA3 presents a simple HTTP interface for reading and posting messages.
 All calls return JSON and must be authenticated with HTTP authentication.
 
 ## GET /folders
+You recieve:
+        { "folder": { "id":"A", "name":"B", "unread":"C" } "folder": { "id":"D", "name":"E", "unread":"F" } }
+
 Subscribed folders with unread messages
 
 ## GET /folders/subscribed
+You recieve:
+        { "folder": { "id":"A", "name":"B", "unread":"C" } "folder": { "id":"D", "name":"E", "unread":"F" } }
+
 Subscribed folders (both unread and read)
 
 ## GET /folders/all
+You recieve:
+        { "folder": { "id":"A", "name":"B", "unread":"C" } "folder": { "id":"D", "name":"E", "unread":"F" } }
+
 All folders you can access
 
 ## GET /folder/XYZ
+You recieve:
+        { "id":"A", "name":"B", "unread":"C" }
+
 Details of folder XYZ
 
 ## POST /folder/XYZ/subscribe
 Subscribe to folder XYZ
 
 ## GET /messages/XYZ
+You recieve:
+        { "message": { "id":"A", "subject":"B", "from":"C", "to":"D", "body":"E" "message": { "id":"F", "subject":"G", "from":"H", "to":"I", "body":"J" } } }
+
 Unread messages in folder XYZ
 
 ## GET /messages/XYZ/all
+        { "message": { "id":"A", "subject":"B", "from":"C", "to":"D", "body":"E" "message": { "id":"F", "subject":"G", "from":"H", "to":"I", "body":"J" } } }
+
 All messages in folder XYZ
 
 ## GET /message/XYZ
