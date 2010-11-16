@@ -8,9 +8,12 @@ All calls return JSON and must be authenticated with HTTP authentication.
 Reading messages
 ================
 
-#### GET /folders ####                subscribed folders
-#### GET /folders/unread ####         subscribed folders with unread messages
-#### GET /folders/all ####            all folders
+#### GET /folders
+subscribed folders
+#### GET /folders/unread
+subscribed folders with unread messages
+#### GET /folders/all
+all folders
 
 GET /folder/XYZ             details of folder XYZ  POST /folder/XYZ/subscribe  subscribe to folder XYZ
 
