@@ -108,4 +108,4 @@ You send:
 You recieve:
         { "messageid": "B" }
 
-To and subject default to the message you are plying to.
+To and subject default to the ones in XYZ.
