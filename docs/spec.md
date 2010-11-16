@@ -33,9 +33,9 @@ All messages in folder XYZ
 Details of message XYZ
 
 ## POST /message
-{ subject: X, body: Y, replyid: ID }
+{ subject: X, body: Y, replyid: Z }
 
-Create a new message. New thread in folder if ID is a folder, follow up if ID is a message (mw: is having one field change purpose depending on context stupid?)
+Create a new message. New thread in folder if Z is a folder, follow up if Z is a message (mw: is having one field change purpose depending on context stupid?)
 
 User Functions
 --------------
