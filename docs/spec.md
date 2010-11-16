@@ -6,13 +6,13 @@ UA3 presents a simple HTTP interface for reading and posting messages.
 All calls return JSON and must be authenticated with HTTP authentication.
 
 ## GET /folders
-Subscribed folders
-
-## GET /folders/unread
 Subscribed folders with unread messages
 
+## GET /folders/subscribed
+Subscribed folders (unread or not)
+
 ## GET /folders/all
-All accessible folders
+All folders you can access
 
 ## GET /folder/XYZ
 Details of folder XYZ
