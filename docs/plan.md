@@ -1,4 +1,4 @@
-Current state: 1a
+Current progress: 1a
 
 JSON is always over HTTP, EDF is always over socket.
 
@@ -26,7 +26,7 @@ JSON is always over HTTP, EDF is always over socket.
 
 2d. Move existing server to a new port
 
-2e. Move socket server to current server port
+2e. Move socket server to current port
 
 ### 3. Replace server
 
