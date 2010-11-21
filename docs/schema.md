@@ -16,7 +16,7 @@ headers - it saves a lot of traffic/memory if messages are skipped/ignored.)
     user:USER:subs  set of subscribed foldernames
     user:USER:all   set of all messages USER can see
 
-(techno: Will all be maintained for each user when a message is posted or is it the intended destination of a sunionstore?)
+(techno: Will all be maintained for each user when a message is posted or built when required?)
 
 # Folders
 
