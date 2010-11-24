@@ -5,6 +5,10 @@ UA3 presents a simple HTTP interface for reading and posting messages.
 
 All calls accept and return JSON and must be authenticated with HTTP authentication. The server will return a session cookie which should be used after the first successful request using username / password.
 
+## Some conventions
+
+Users and folders are keyed by name (numeric IDs are maintained for UA2 backwards compatibility but they are deprecated and you should not rely on them forever). Where you previously posted a message using toid:4 you should now use to:techno. Names are case insensitive in this context but mixed case is still supported in the actual definition, so a post request /folder/private to:techno will be seen by Techno in Private but creating a new folder called private is not possible.
+
 ## GET /folders
 
 All folders you can access.
@@ -88,14 +92,17 @@ This will be a flat structure.
 Details of message XYZ.
 
 You recieve:
-        { "subject": "A", "body": "B", "folderid": "C", "parentid": "D" }
+        { "subject": "A", "body": "B", "folder": "C", "inReplyTo": "D", "inReplyTo": "E" }
+
+Folder is the name
+inReplyTo is a message ID of the parent where D is the parent of XYZ, E is the parent of D.
 
 ## POST /folder/XYZ
 
 Create a message in folder XYZ.
 
 You send:
-        { "subject": "A", "toid": "B", "body": "C" }
+        { "subject": "A", "to": "B", "body": "C" }
 You recieve:
         { "messageid": "D" }
 
