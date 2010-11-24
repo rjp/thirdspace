@@ -11,7 +11,7 @@ Users and folders are keyed by name (numeric IDs are maintained for UA2 backward
 
         POST /folder/private
         
-        { to:"techno", "body":"bingle" }
+        { to:"techno", "body": "bingle" }
 
 will be seen by Techno in Private but creating a new folder called "private" is not possible.
 
@@ -22,12 +22,12 @@ All folders you can access.
 You recieve:
         {
           "folder": {
-            "id":"A", "name":"B", "unread":"C"
+            "id": "A", "name": "B", "unread": "C"
           },
           "folder": {
-            "id":"D", "name":"E", "unread":"F",
+            "id": "D", "name": "E", "unread": "F",
             "folder": {
-              "id":"G", "name":"H"
+              "id": "G", "name": "H"
             }
           }
         }
@@ -39,7 +39,7 @@ This may be a tree structure.
 Subscribed folders (both read and unread).
 
 You recieve:
-        { "folder": { "id":"A", "name":"B", "unread":"C" }, "folder": { "id":"D", "name":"E"} } }
+        { "folder": { "id": "A", "name": "B", "unread": "C" }, "folder": { "id": "D", "name": "E"} } }
 
 This will always be a flat structure.
 
@@ -48,7 +48,7 @@ This will always be a flat structure.
 Subscribed folders (unread only).
 
 You recieve:
-        { "folder": { "id":"A", "name":"B", "unread":"C" }, "folder": { "id":"D", "name":"E", "unread":"F" } }
+        { "folder": { "id": "A", "name": "B", "unread": "C" }, "folder": { "id": "D", "name": "E", "unread": "F" } }
 
 This will always be a flat structure.
 
@@ -57,7 +57,7 @@ This will always be a flat structure.
 Details of folder XYZ
 
 You recieve:
-        { "id":"A", "name":"B", "unread":"C" }
+        { "id": "A", "name": "B", "unread": "C" }
 
 ## POST /folder/XYZ/subscribe
 
@@ -70,12 +70,12 @@ All messages in folder XYZ.
 You recieve:
         {
           "message": {
-            "id":"A", "subject":"B", "from":"C", "to":"D", "body":"E",
+            "id": "A", "subject": "B", "from": "C", "to": "D", "body": "E",
             "message": {
-              "id":"F", "subject":"G", "from":"H", "to":"I", "body":"J"
+              "id": "F", "subject": "G", "from": "H", "to": "I", "body": "J"
             },
             "message": {
-              "id":"K", "subject":"L", "from":"M", "to":"N", "body":"O"
+              "id": "K", "subject": "L", "from": "M", "to": "N", "body": "O"
             }
           }
         }
@@ -87,8 +87,8 @@ Unread messages in folder XYZ.
 
 You recieve:
         {
-          "message": { "id":"A", "subject":"B", "from":"C", "to":"D", "body":"E" },
-          "message": { "id":"F", "subject":"G", "from":"H", "to":"I", "body":"J" }
+          "message": { "id": "A", "subject": "B", "from": "C", "to": "D", "body": "E" },
+          "message": { "id": "F", "subject": "G", "from": "H", "to": "I", "body": "J" }
         }
 
 This will be a flat structure.
@@ -100,8 +100,7 @@ Details of message XYZ.
 You recieve:
         { "subject": "A", "body": "B", "folder": "C", "inReplyTo": "D", "inReplyTo": "E" }
 
-Folder is the name
-inReplyTo is a message ID of the parent where D is the parent of XYZ, E is the parent of D.
+inReplyTo is a message ID of the parent where D is the parent of XYZ, E is the parent of D etc.
 
 ## POST /folder/XYZ
 
