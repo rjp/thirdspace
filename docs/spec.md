@@ -3,7 +3,7 @@ UA3 Spec
 
 UA3 presents a simple HTTP interface for reading and posting messages.
 
-All calls return JSON and must be authenticated with HTTP authentication.
+All calls accept and return JSON and must be authenticated with HTTP authentication. The server will return a session cookie which should be used after the first successful request using username / password.
 
 ## GET /folders
 
