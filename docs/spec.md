@@ -7,7 +7,12 @@ All calls accept and return JSON and must be authenticated with HTTP authenticat
 
 ## Some conventions
 
-Users and folders are keyed by name (numeric IDs are maintained for UA2 backwards compatibility but they are deprecated and you should not rely on them forever). Where you previously posted a message using toid:4 you should now use to:techno. Names are case insensitive in this context but mixed case is still supported in the actual definition, so a post request /folder/private to:techno will be seen by Techno in Private but creating a new folder called private is not possible.
+Users and folders are keyed by name (numeric IDs are maintained for UA2 backwards compatibility but they are deprecated and you should not rely on them forever). Where you previously posted a message using toid:4 you should now use to:techno. Names are case insensitive in this context but mixed case is still supported in the actual definition, so
+
+POST /folder/private
+{ to:"techno", "body":"bingle" }
+
+will be seen by Techno in Private but creating a new folder called "private" is not possible.
 
 ## GET /folders
 
