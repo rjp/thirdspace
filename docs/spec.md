@@ -98,9 +98,9 @@ This will be a flat structure.
 Details of message XYZ.
 
 You recieve:
-        { "subject": "A", "body": "B", "folder": "C", "inReplyTo": "D", "inReplyTo": "E" }
+        { "subject": "A", "body": "B", "folder": "C", "inReplyTo":["D","E"] }
 
-inReplyTo is a message ID of the parent where D is the parent of XYZ, E is the parent of D etc.
+inReplyTo contains the message ID(s) of the parent(s) where D is the parent of XYZ, E is the parent of D etc.
 
 ## POST /folder/XYZ
 
