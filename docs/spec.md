@@ -5,7 +5,7 @@ UA3 presents a simple HTTP interface for reading and posting messages.
 
 All calls accept and return JSON and must be authenticated with HTTP authentication. The server will return a session cookie which should be used after the first successful request using username / password.
 
-For the more estoteric requests the action may be something other than GET or POST. Because many proxies will only allow these two the HTTP interface will check the X-UA3-Action header and, if present, use that value instead of GET or POST that was sent in the content.
+For more estoteric requests the action may be something other than GET or POST. Because many proxies will only allow these two the HTTP interface will check the X-UA3-Action header and, if present, use that value instead of GET or POST that was sent in the content.
 
 ## Some conventions
 
