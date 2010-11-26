@@ -129,15 +129,6 @@ You receive:
 
 This will be a flat structure.
 
-## GET /message/XYZ
-
-Details of message XYZ.
-
-You recieve:
-        { "subject": "A", "body": "B", "folder": "C", "inReplyTo":"D" }
-
-inReplyTo contains the message ID of the parent.
-
 ## POST /folder/XYZ
 
 Create a message in folder XYZ.
@@ -149,6 +140,15 @@ You send:
 You recieve:
 
         { "messageId": "D" }
+
+## GET /message/XYZ
+
+Details of message XYZ.
+
+You recieve:
+        { "subject": "A", "body": "B", "folder": "C", "inReplyTo":"D" }
+
+inReplyTo contains the message ID of the parent.
 
 ## POST /message/XYZ
 
@@ -163,4 +163,3 @@ You receive:
         { "messageId": "B" }
 
 To and subject default to the ones in XYZ.
-
