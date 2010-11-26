@@ -100,7 +100,7 @@ You recieve:
 
         { "name": "A" }
 
-## GET /messages/XYZ
+## GET /folder/XYZ
 
 All messages in folder XYZ.
 
@@ -116,7 +116,7 @@ You receive:
 
 This will be a flat structure.
 
-## GET /messages/XYZ/unread
+## GET /folder/XYZ/unread
 
 Unread messages in folder XYZ.
 
