@@ -3,13 +3,11 @@ UA3 Spec
 
 UA3 presents a simple HTTP interface for reading and posting messages.
 
-All calls accept and return JSON and must be authenticated with HTTP authentication. The server will return a session cookie which should be used after the first successful request using username / password.
-
-For more estoteric requests the action may be something other than GET or POST. Because many proxies will only allow these two the HTTP interface will check the X-UA3-Action header and, if present, use that value instead of GET or POST that was sent in the content.
+All calls accept and return JSON and must be authenticated with HTTP authentication. 
 
 ## Some conventions
 
-Users and folders are keyed by name (numeric IDs are maintained for UA2 backwards compatibility but they are deprecated and you should not rely on them forever). Where you previously posted a message using toid:4 you should now use to:techno. Names are case insensitive in this context but mixed case is still supported in the actual definition, so
+Users and folders are keyed by lower-cased name. Names are case insensitive in this context but mixed case is still supported in the actual definition, so
 
         POST /folder/private
         
@@ -21,27 +19,31 @@ will be seen by Techno in Private but creating a new folder called "private" is 
 
 All folders you can access.
 
-You recieve:
+You receive:
         {
           "folder": {
-            "id": "A", "name": "B", "unread": "C"
+            "name": "B", "unread": "C"
           },
           "folder": {
-            "id": "D", "name": "E", "unread": "F",
-            "folder": {
-              "id": "G", "name": "H"
-            }
+            "name": "E", "unread": "F",
           }
         }
 
-This may be a tree structure.
+This is a flat structure.
 
 ## GET /folders/subscribed
 
 Subscribed folders (both read and unread).
 
 You recieve:
-        { "folder": { "id": "A", "name": "B", "unread": "C" }, "folder": { "id": "D", "name": "E"} } }
+        { 
+          "folder": { 
+            "name": "B", "unread": "C" 
+          }, 
+          "folder": { 
+            "name": "E"
+          } 
+        }
 
 This will always be a flat structure.
 
@@ -49,8 +51,16 @@ This will always be a flat structure.
 
 Subscribed folders (unread only).
 
-You recieve:
-        { "folder": { "id": "A", "name": "B", "unread": "C" }, "folder": { "id": "D", "name": "E", "unread": "F" } }
+You receive:
+
+        { 
+          "folder": { 
+            "name": "B", "unread": "C" 
+          }, 
+          "folder": { 
+            "name": "E", "unread": "F" 
+          } 
+        }
 
 This will always be a flat structure.
 
@@ -59,7 +69,8 @@ This will always be a flat structure.
 Details of folder XYZ
 
 You recieve:
-        { "id": "A", "name": "B", "unread": "C" }
+
+        { "name": "B", "unread": "C", "messages": "D" }
 
 ## POST /folder/XYZ/subscribe
 
@@ -69,25 +80,22 @@ Subscribe to folder XYZ
 
 All messages in folder XYZ.
 
-You recieve:
+You receive:
         {
           "message": {
-            "id": "A", "subject": "B", "from": "C", "to": "D", "body": "E",
-            "message": {
-              "id": "F", "subject": "G", "from": "H", "to": "I", "body": "J"
-            },
-            "message": {
-              "id": "K", "subject": "L", "from": "M", "to": "N", "body": "O"
-            }
+            "id": "A", "subject": "B", "from": "C", "to": "D", "body": "E"
+          }
+          "message": {
+            "id": "K", "subject": "L", "from": "M", "to": "N", "body": "O"
           }
         }
 
-This may be a tree structure.
-
 ## GET /messages/XYZ/unread
+
 Unread messages in folder XYZ.
 
-You recieve:
+You receive:
+
         {
           "message": { "id": "A", "subject": "B", "from": "C", "to": "D", "body": "E" },
           "message": { "id": "F", "subject": "G", "from": "H", "to": "I", "body": "J" }
@@ -100,17 +108,20 @@ This will be a flat structure.
 Details of message XYZ.
 
 You recieve:
-        { "subject": "A", "body": "B", "folder": "C", "inReplyTo":["D","E"] }
+        { "subject": "A", "body": "B", "folder": "C", "inReplyTo":"D" }
 
-inReplyTo contains the message ID(s) of the parent(s) where D is the parent of XYZ, E is the parent of D etc.
+inReplyTo contains the message ID of the parent.
 
 ## POST /folder/XYZ
 
 Create a message in folder XYZ.
 
 You send:
+
         { "subject": "A", "to": "B", "body": "C" }
+
 You recieve:
+
         { "messageid": "D" }
 
 ## POST /message/XYZ
@@ -118,8 +129,12 @@ You recieve:
 Create a message in reply to message XYZ. 
 
 You send:
+
         { "body": "A" }
-You recieve:
+
+You receive:
+
         { "messageid": "B" }
 
 To and subject default to the ones in XYZ.
+
