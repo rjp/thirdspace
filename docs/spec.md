@@ -114,7 +114,7 @@ You receive:
           }
         }
 
-This is a flat structure.
+This will be a flat structure.
 
 ## GET /messages/XYZ/unread
 
