@@ -5,6 +5,8 @@ UA3 presents a simple HTTP interface for reading and posting messages.
 
 All calls accept and return JSON and must be authenticated with HTTP authentication. The server will return a session cookie which should be used after the first successful request using username / password.
 
+For the more estoteric requests the action may be something other than GET or POST. Because many proxies will only allow these two the HTTP interface will check the X-UA3-Action header and, if present, use that value instead of GET or POST that was sent in the content.
+
 ## Some conventions
 
 Users and folders are keyed by name (numeric IDs are maintained for UA2 backwards compatibility but they are deprecated and you should not rely on them forever). Where you previously posted a message using toid:4 you should now use to:techno. Names are case insensitive in this context but mixed case is still supported in the actual definition, so
