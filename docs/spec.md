@@ -15,6 +15,8 @@ Users and folders are keyed by lower-cased name. Names are case insensitive in t
 
 will be seen by Techno in Private but creating a new folder called "private" is not possible.
 
+** It's also worth noting that JSON itself uses case sensitive keys **
+
 ## GET /folders
 
 All folders you can access.
@@ -29,7 +31,7 @@ You receive:
           }
         }
 
-This is a flat structure.
+This will be a flat structure.
 
 ## GET /folders/subscribed
 
@@ -45,7 +47,7 @@ You recieve:
           } 
         }
 
-This will always be a flat structure.
+This will be a flat structure.
 
 ## GET /folders/unread
 
@@ -62,7 +64,7 @@ You receive:
           } 
         }
 
-This will always be a flat structure.
+This will be a flat structure.
 
 ## GET /folder/XYZ
 
@@ -72,9 +74,31 @@ You recieve:
 
         { "name": "B", "unread": "C", "messages": "D" }
 
+Messages is the total count (read and unread).
+
 ## POST /folder/XYZ/subscribe
 
 Subscribe to folder XYZ
+
+You send:
+
+        { "name": "A" }
+
+You recieve:
+
+        { "name": "A" }
+
+## POST /folder/XYZ/unsubscribe
+
+Unsubscribe from folder XYZ
+
+You send:
+
+        { "name": "A" }
+
+You recieve:
+
+        { "name": "A" }
 
 ## GET /messages/XYZ
 
@@ -89,6 +113,8 @@ You receive:
             "id": "K", "subject": "L", "from": "M", "to": "N", "body": "O"
           }
         }
+
+This is a flat structure.
 
 ## GET /messages/XYZ/unread
 
@@ -122,7 +148,7 @@ You send:
 
 You recieve:
 
-        { "messageid": "D" }
+        { "messageId": "D" }
 
 ## POST /message/XYZ
 
@@ -134,7 +160,7 @@ You send:
 
 You receive:
 
-        { "messageid": "B" }
+        { "messageId": "B" }
 
 To and subject default to the ones in XYZ.
 
