@@ -7,6 +7,8 @@ All calls accept and return JSON and must be authenticated with HTTP authenticat
 
 ## Some conventions
 
+** JSON uses case sensitive keys, messageid is NOT the same as messageId **
+
 Users and folders are keyed by lower-cased name. Names are case insensitive in this context but mixed case is still supported in the actual definition, so
 
         POST /folder/private
@@ -14,8 +16,6 @@ Users and folders are keyed by lower-cased name. Names are case insensitive in t
         { to:"techno", "body": "bingle" }
 
 will be seen by Techno in Private but creating a new folder called "private" is not possible.
-
-** It's also worth noting that JSON itself uses case sensitive keys **
 
 ## GET /folders
 
