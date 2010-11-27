@@ -37,7 +37,7 @@ This will be a flat structure.
 
 Subscribed folders (both read and unread).
 
-You recieve:
+You receive:
         { 
           "folder": { 
             "name": "B", "unread": "C" 
@@ -70,7 +70,7 @@ This will be a flat structure.
 
 Details of folder XYZ
 
-You recieve:
+You receive:
 
         { "name": "B", "unread": "C", "messages": "D" }
 
@@ -84,7 +84,7 @@ You send:
 
         { "name": "A" }
 
-You recieve:
+You receive:
 
         { "name": "A" }
 
@@ -96,7 +96,7 @@ You send:
 
         { "name": "A" }
 
-You recieve:
+You receive:
 
         { "name": "A" }
 
@@ -123,8 +123,8 @@ Unread messages in folder XYZ.
 You receive:
 
         {
-          "message": { "id": "A", "subject": "B", "from": "C", "to": "D", "body": "E" },
-          "message": { "id": "F", "subject": "G", "from": "H", "to": "I", "body": "J" }
+          "message": { "id": "A", "subject": "B", "from": "C", "to": "D", "body": "E", "epoch":"F", "folder":"G" },
+          "message": { "id": "F", "subject": "G", "from": "H", "to": "I", "body": "J", "epoch":"K", "folder":"L" }
         }
 
 This will be a flat structure.
@@ -137,16 +137,17 @@ You send:
 
         { "subject": "A", "to": "B", "body": "C" }
 
-You recieve:
+You receive:
 
-        { "messageId": "D" }
+        { "messageId": "D", "folder":"E", "epoch":"F" }
 
 ## GET /message/XYZ
 
 Details of message XYZ.
 
-You recieve:
-        { "subject": "A", "body": "B", "folder": "C", "inReplyTo":"D" }
+You receive:
+
+        { "subject": "A", "body": "B", "folder": "C", "inReplyTo":"D", "epoch":"E", "folder":"F" }
 
 inReplyTo contains the message ID of the parent.
 
@@ -160,6 +161,6 @@ You send:
 
 You receive:
 
-        { "messageId": "B" }
+        { "messageId": "B", "epoch":"C", "folder":"D" }
 
 To and subject default to the ones in XYZ.
