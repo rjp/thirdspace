@@ -7,6 +7,8 @@ All calls accept and return JSON and must be authenticated with HTTP authenticat
 
 ## Some conventions
 
+** JSON uses case sensitive keys, messageid is NOT the same as messageId **
+
 Users and folders are keyed by lower-cased name. Names are case insensitive in this context but mixed case is still supported in the actual definition, so
 
         POST /folder/private
@@ -29,7 +31,7 @@ You receive:
           }
         }
 
-This is a flat structure.
+This will be a flat structure.
 
 ## GET /folders/subscribed
 
@@ -45,7 +47,7 @@ You recieve:
           } 
         }
 
-This will always be a flat structure.
+This will be a flat structure.
 
 ## GET /folders/unread
 
@@ -62,7 +64,7 @@ You receive:
           } 
         }
 
-This will always be a flat structure.
+This will be a flat structure.
 
 ## GET /folder/XYZ
 
@@ -72,11 +74,33 @@ You recieve:
 
         { "name": "B", "unread": "C", "messages": "D" }
 
+Messages is the total count (read and unread).
+
 ## POST /folder/XYZ/subscribe
 
 Subscribe to folder XYZ
 
-## GET /messages/XYZ
+You send:
+
+        { "name": "A" }
+
+You recieve:
+
+        { "name": "A" }
+
+## POST /folder/XYZ/unsubscribe
+
+Unsubscribe from folder XYZ
+
+You send:
+
+        { "name": "A" }
+
+You recieve:
+
+        { "name": "A" }
+
+## GET /folder/XYZ
 
 All messages in folder XYZ.
 
@@ -90,7 +114,9 @@ You receive:
           }
         }
 
-## GET /messages/XYZ/unread
+This will be a flat structure.
+
+## GET /folder/XYZ/unread
 
 Unread messages in folder XYZ.
 
@@ -103,15 +129,6 @@ You receive:
 
 This will be a flat structure.
 
-## GET /message/XYZ
-
-Details of message XYZ.
-
-You recieve:
-        { "subject": "A", "body": "B", "folder": "C", "inReplyTo":"D" }
-
-inReplyTo contains the message ID of the parent.
-
 ## POST /folder/XYZ
 
 Create a message in folder XYZ.
@@ -122,7 +139,16 @@ You send:
 
 You recieve:
 
-        { "messageid": "D" }
+        { "messageId": "D" }
+
+## GET /message/XYZ
+
+Details of message XYZ.
+
+You recieve:
+        { "subject": "A", "body": "B", "folder": "C", "inReplyTo":"D" }
+
+inReplyTo contains the message ID of the parent.
 
 ## POST /message/XYZ
 
@@ -134,7 +160,6 @@ You send:
 
 You receive:
 
-        { "messageid": "B" }
+        { "messageId": "B" }
 
 To and subject default to the ones in XYZ.
-
