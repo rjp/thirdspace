@@ -23,15 +23,10 @@ All folders you can access.
 
 You receive:
         {
-          "folder": {
-            "name": "B", "unread": "C"
-          },
-          "folder": {
-            "name": "E", "unread": "F",
-          }
+          "folder": { "name": "B", "unread": "C" },
+          "folder": { "name": "E", "unread": "F" },
+          ...
         }
-
-This will be a flat structure.
 
 ## GET /folders/subscribed
 
@@ -39,15 +34,10 @@ Subscribed folders (both read and unread).
 
 You receive:
         { 
-          "folder": { 
-            "name": "B", "unread": "C" 
-          }, 
-          "folder": { 
-            "name": "E"
-          } 
+          "folder": { "name": "B", "unread": "C" }, 
+          "folder": { "name": "E" },
+          ...
         }
-
-This will be a flat structure.
 
 ## GET /folders/unread
 
@@ -56,15 +46,10 @@ Subscribed folders (unread only).
 You receive:
 
         { 
-          "folder": { 
-            "name": "B", "unread": "C" 
-          }, 
-          "folder": { 
-            "name": "E", "unread": "F" 
-          } 
+          "folder": { "name": "B", "unread": "C" }, 
+          "folder": { "name": "E", "unread": "F" },
+          ...
         }
-
-This will be a flat structure.
 
 ## GET /folder/XYZ
 
@@ -100,21 +85,17 @@ You receive:
 
         { "name": "A" }
 
-## GET /folder/XYZ
+## GET /folder/XYZ/all
 
 All messages in folder XYZ.
 
 You receive:
-        {
-          "message": {
-            "id": "A", "subject": "B", "from": "C", "to": "D", "body": "E"
-          }
-          "message": {
-            "id": "K", "subject": "L", "from": "M", "to": "N", "body": "O"
-          }
-        }
 
-This will be a flat structure.
+        {
+          "message": { "id": "A", "subject": "B", "from": "C", "to": "D", "body": "E", "epoch":"F", "folder":"G" },
+          "message": { "id": "F", "subject": "G", "from": "H", "to": "I", "body": "J", "epoch":"K", "folder":"L" },
+          ...
+        }
 
 ## GET /folder/XYZ/unread
 
@@ -124,10 +105,9 @@ You receive:
 
         {
           "message": { "id": "A", "subject": "B", "from": "C", "to": "D", "body": "E", "epoch":"F", "folder":"G" },
-          "message": { "id": "F", "subject": "G", "from": "H", "to": "I", "body": "J", "epoch":"K", "folder":"L" }
+          "message": { "id": "F", "subject": "G", "from": "H", "to": "I", "body": "J", "epoch":"K", "folder":"L" },
+          ...
         }
-
-This will be a flat structure.
 
 ## POST /folder/XYZ
 
