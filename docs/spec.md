@@ -87,39 +87,43 @@ You receive:
 
 ## GET /folder/XYZ/all
 
-All messages in folder XYZ.
+All messages in folder XYZ without bodies
 
 You receive:
 
         {
-          "message": { "id": "A", "subject": "B", "from": "C", "to": "D", "body": "E", "epoch":"F", "folder":"G" },
-          "message": { "id": "F", "subject": "G", "from": "H", "to": "I", "body": "J", "epoch":"K", "folder":"L" },
+          "message": { "id": "I1", "subject": "S1", "from": "F1", "to": "T1", "epoch":"E1", "folder":"C1" },
+          "message": { "id": "I2", "subject": "S2", "from": "F2", "to": "T2", "epoch":"E2", "folder":"C2" },
+          ...
+        }
+
+## GET /folder/XYZ/all/full
+
+        {
+          "message": { "id": "I1", "subject": "S1", "from": "F1", "to": "T1", "epoch":"E1", "folder":"C1", "body": "B1" },
+          "message": { "id": "I2", "subject": "S2", "from": "F2", "to": "T2", "epoch":"E2", "folder":"C2", "body": "B2" },
           ...
         }
 
 ## GET /folder/XYZ/unread
 
-Unread messages in folder XYZ.
+Unread messages in folder XYZ without bodies.
 
 You receive:
 
         {
-          "message": { "id": "A", "subject": "B", "from": "C", "to": "D", "body": "E", "epoch":"F", "folder":"G" },
-          "message": { "id": "F", "subject": "G", "from": "H", "to": "I", "body": "J", "epoch":"K", "folder":"L" },
+          "message": { "id": "I1", "subject": "S1", "from": "F1", "to": "T1", "epoch": "E1", "folder": "C1", "thread": "X1" },
+          "message": { "id": "I2", "subject": "S2", "from": "F2", "to": "T2", "epoch": "E2", "folder": "C2", "thread": "X2" },
           ...
         }
 
-## POST /folder/XYZ
+## GET /folder/XYZ/unread/full
 
-Create a message in folder XYZ.
-
-You send:
-
-        { "subject": "A", "to": "B", "body": "C" }
-
-You receive:
-
-        { "messageId": "D", "folder":"E", "epoch":"F" }
+        {
+          "message": { "id": "I1", "subject": "S1", "from": "F1", "to": "T1", "epoch": "E1", "folder":"C1", "body": "B1", "thread": "X1" },
+          "message": { "id": "I2", "subject": "S2", "from": "F2", "to": "T2", "epoch": "E2", "folder":"C2", "body": "B2", "thread": "X2" },
+          ...
+        }
 
 ## GET /message/XYZ
 
@@ -127,20 +131,36 @@ Details of message XYZ.
 
 You receive:
 
-        { "subject": "A", "body": "B", "folder": "C", "inReplyTo":"D", "epoch":"E", "folder":"F" }
+        { "subject": "S", "body": "B", "folder": "C", "inReplyTo":"P", "epoch":"E", "thread":"X" }
 
 inReplyTo contains the message ID of the parent.
+
+## POST /folder/XYZ
+
+Create a message in folder XYZ.
+
+You send:
+
+        { "subject": "S", "to": "T", "body": "B" }
+
+You receive:
+
+        { "messageId": "I", "folder": "C", "epoch": "E", "thread": "X" }
 
 ## POST /message/XYZ
 
 Create a message in reply to message XYZ. 
 
-You send:
+You send, minimally,
 
-        { "body": "A" }
+        { "body": "B" }
+
+Or maximally, if you want to change to and/or subject,
+
+        { "body": "B", "to": "T", "subject": "S" }
 
 You receive:
 
-        { "messageId": "B", "epoch":"C", "folder":"D" }
+        { "messageId": "I", "epoch": "E", "folder": "C", "thread": "X" }
 
-To and subject default to the ones in XYZ.
+to, subject, and thread default to the ones in XYZ. Note that any update to thread will be ignored.
