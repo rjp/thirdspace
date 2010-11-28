@@ -1,4 +1,4 @@
-In this doc: MID is a message ID, USER is a username, FOLDER is a foldername, S1 is a subscribed folder
+In this doc: MID is a message ID, TID is a thread ID, FOLDER is a foldername, USER is a username, S1 is a subscribed folder
 
 # Counters
 
@@ -8,6 +8,10 @@ In this doc: MID is a message ID, USER is a username, FOLDER is a foldername, S1
 # Folders
 
     folder:FOLDER   set of all the message IDs in this folder
+
+# Threads
+
+    thread:TID      set of all the message IDs in this thread
 
 # Messages
 
