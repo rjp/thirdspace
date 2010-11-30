@@ -1,8 +1,7 @@
 var sys = require('sys');
 var connect = require('connect');
-var auth = require('connect-auth');
 var fs = require('fs');
-var redisFactory = require('redis-node');
+var redisFactory = require('./redis-node-client/lib/redis-client');
 var Log = require('log'), log = new Log(Log.INFO);
 
 // default redis host and port - TODO get this from config?
@@ -14,18 +13,16 @@ var config = JSON.parse(config_json);
 
 // create a bogstandard authenticating connect server
 var server = connect.createServer(
-    connect.logger({ format: ':method :url' }),
-    connect.bodyDecoder(),
-    auth([
-        auth.Basic({validatePassword: authenticate, realm: 'ua3'})
-    ]),
-    connect.router(app),
-    connect.errorHandler({ dumpExceptions: true, showStack: true })
+    connect.logger({buffer:true})
 );
 
-server.listen(config.port);
-log.info('Connect server listening on port '+config.port);
+server.use(connect.basicAuth(authenticate, 'ua3'));
 
+function folders(app) {
+    app.get('/', function(req, res, next){
+        json_folders(req, res, req.remoteUser);
+    });
+}
 // this should probably be smarter
 function authenticate(user, pass, success, failure) {
     log.info('pass is '+pass);
@@ -46,7 +43,7 @@ function authenticate(user, pass, success, failure) {
 function buffer_to_strings(x) {
     for(var i in x) {
         // TODO check for hasOwnProperty here
-        if (typeof x[i] === "buffer") {
+        if (typeof x[i] === "object" || typeof x[i] === "buffer") {
             x[i] = x[i].toString('utf8');
         }
     }
@@ -78,13 +75,15 @@ function canon_user(username) {
 function get_folder_unread(folder, user_read, callback) {
     var c;
     redis.scard('folder:'+folder, function(e, c){
+        if (e) throw(e);
         redis.sdiff('folder:'+folder, user_read, function(e,v){
+            if (e) throw(e);
             callback(undefined, {folder:folder, unread:v.length, count: c});
         })
     });
 }
 
-function json_folders(req, res, err, auth) {
+function json_folders(req, res, auth) {
     var c_user = 'user:' + canon_user(auth);
     var k_subs = c_user + ':subs';
     var k_read = c_user + ':read';
@@ -123,9 +122,13 @@ function makeHandler(name, after_auth) {
 }
 
 // finally, our actual routing table
-function app(app) {
-    app.get('/folders', makeHandler('folders', json_folders));
+function pending(app) {
     app.get('/folder/:name', makeHandler('folder/name', json_folder));
     app.get('/folder/:name/:extra', makeHandler('folder/name', json_folder));
 }
+
+server.use('/folders', connect.router(folders));
+
+server.listen(config.port);
+log.info('Connect server listening on port '+config.port);
 
