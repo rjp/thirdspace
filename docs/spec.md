@@ -1,21 +1,23 @@
-*This document is intended for guidance only and in no way represents a binding contract of functionality. Details are subject to alteration and correction without notice.*
+*This document is intended for guidance only and the functionality described in no way represents a binding contract. Details are subject to alteration and correction without notice.*
 
 UA3 Spec
 ========
 
-UA3 presents a simple HTTP interface for reading and posting messages.
+UA3 presents a simple HTTP interface for reading and posting messages, wholists and other functions.
 
-All content is in JSON format (specifically MIME type application/xml+ua3) and must be authenticated with HTTP authentication (the only exception to this is GET /system/banner). Following a successful authentication attempt the server will return the "ua3session" cookie - you may use this cookie in lieu of the username / password combination for subsequent requests.
+All content is in JSON format (Content-Type: application/xml+ua3). Requests must be authenticated with HTTP authentication (see detailed spec for exceptions). Following a successful authentication attempt the server will return the "ua3session" cookie - you may use this cookie in lieu of the username / password combination for subsequent requests.
 
 ## Some conventions
 
-** JSON uses case sensitive keys, messageid is NOT the same as messageId **
+** JSON uses case sensitive keys, onetwothree is NOT the same as OneTwoThree **
+
+Where a value appears in quotes it represents a string. Where a value does not appear in quotes it represents a number or a boolean (true|false).
 
 Users and folders are keyed by lower-cased name. Names are case insensitive in this context but mixed case is still supported in the actual definition, so
 
         POST /folder/private
         
-        { to:"techno", "body": "bingle" }
+        { to:"techno", "body":"bingle" }
 
 will be seen by Techno in Private but creating a new folder called "private" is not possible.
 
@@ -24,21 +26,26 @@ will be seen by Techno in Private but creating a new folder called "private" is 
 All folders you can access.
 
 You receive:
-        {
-          "folder": { "name": "B", "unread": "C" },
-          "folder": { "name": "E", "unread": "F" },
-          ...
+        { "folders": [
+            { "name":"General", "unread":1, "messagecount":6 },
+            { "name":"UA", "messagecount":5 },
+            {"name":"New-Confs", "unread":3, "messagecount":4 },
+            ...
+          ]
         }
+
+Message count is all the messages in a folder. Unread is zero if not present *(always include it? - techno)*.
 
 ## GET /folders/subscribed
 
 Subscribed folders (both read and unread).
 
 You receive:
-        { 
-          "folder": { "name": "B", "unread": "C" }, 
-          "folder": { "name": "E" },
-          ...
+        { "folders": [
+            { "name":"General", "unread":1, "messagecount":6 },
+            { "name":"UA", "messagecount":5 },
+            ...
+          ]
         }
 
 ## GET /folders/unread
@@ -47,21 +54,13 @@ Subscribed folders (unread only).
 
 You receive:
 
-        { 
-          "folder": { "name": "B", "unread": "C" }, 
-          "folder": { "name": "E", "unread": "F" },
-          ...
+        { "folders": [
+            { "name":"General", "unread":1, "messagecount":6 },
+            ...
+          ]
         }
 
-## GET /folder/XYZ
-
-Details of folder XYZ
-
-You receive:
-
-        { "name": "B", "unread": "C", "messages": "D" }
-
-Messages is the total count (read and unread).
+Because unread implies subscribed you can do /all/unread to remove the filter.
 
 ## POST /folder/XYZ/subscribe
 
@@ -69,11 +68,11 @@ Subscribe to folder XYZ
 
 You send:
 
-        { "name": "A" }
+        { "name":"A" }
 
 You receive:
 
-        { "name": "A" }
+        { "name":"A" }
 
 ## POST /folder/XYZ/unsubscribe
 
@@ -81,31 +80,28 @@ Unsubscribe from folder XYZ
 
 You send:
 
-        { "name": "A" }
+        { "name":"A" }
 
 You receive:
 
-        { "name": "A" }
+        { "name":"A" }
 
-## GET /folder/XYZ/all
+## GET /folder/XYZ
 
-All messages in folder XYZ without bodies
+All messages in folder XYZ without bodies. You can also use /folder/XYZ/all.
 
 You receive:
 
-        {
-          "message": { "id": "I1", "subject": "S1", "from": "F1", "to": "T1", "epoch":"E1", "folder":"C1" },
-          "message": { "id": "I2", "subject": "S2", "from": "F2", "to": "T2", "epoch":"E2", "folder":"C2" },
-          ...
+        { "folder":"UA-Dev", "messagecount":20, "unread":10,
+          "messages": [
+            { "id":2000874, "epoch":1289914330, "from":"Isvara", "subject":"DNS", "read":true },
+            { "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874 },
+            { "id":2000887, "epoch":1289914963, "from":"isoma", "to":"BW", "subject":"DNS", "inReplyTo":2000881 },
+            ...
+          ]
         }
 
-## GET /folder/XYZ/all/full
-
-        {
-          "message": { "id": "I1", "subject": "S1", "from": "F1", "to": "T1", "epoch":"E1", "folder":"C1", "body": "B1" },
-          "message": { "id": "I2", "subject": "S2", "from": "F2", "to": "T2", "epoch":"E2", "folder":"C2", "body": "B2" },
-          ...
-        }
+inReplyTo contains the message ID of the immediate parent.
 
 ## GET /folder/XYZ/unread
 
@@ -113,29 +109,28 @@ Unread messages in folder XYZ without bodies.
 
 You receive:
 
-        {
-          "message": { "id": "I1", "subject": "S1", "from": "F1", "to": "T1", "epoch": "E1", "folder": "C1", "thread": "X1" },
-          "message": { "id": "I2", "subject": "S2", "from": "F2", "to": "T2", "epoch": "E2", "folder": "C2", "thread": "X2" },
-          ...
+        { "folder":"UA-Dev", "messagecount":20, "unread":10,
+          "messages": [
+            { "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874 },
+            { "id":2000887, "epoch":1289914963, "from":"isoma", "to":"BW", "subject":"DNS", "inReplyTo":2000881 },
+            ...
+          ]
         }
 
-## GET /folder/XYZ/unread/full
+## GET /folder/XYZ/full
 
-        {
-          "message": { "id": "I1", "subject": "S1", "from": "F1", "to": "T1", "epoch": "E1", "folder":"C1", "body": "B1", "thread": "X1" },
-          "message": { "id": "I2", "subject": "S2", "from": "F2", "to": "T2", "epoch": "E2", "folder":"C2", "body": "B2", "thread": "X2" },
-          ...
+All messages in folder XYZ with bodies.
+
+        { "folder":"UA-Dev", "messagecount":20, "unread":10,
+          "messages": [
+            { "id":2000874, "epoch":1289914330, "from":"Isvara", "subject":"DNS", "read":true, "body":"Is it broken? It seems very slow." },
+            { "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874, "body":"Hmmm, yes. One of the server's two nameservers is down." },
+            { "id":2000887, "epoch":1289914963, "from":"isoma", "to":"BW", "subject":"DNS", "inReplyTo":2000881, "body":"Install unbound locally? It's very light on memory." },
+            ...
+          ]
         }
 
-## GET /message/XYZ
-
-Details of message XYZ.
-
-You receive:
-
-        { "subject": "S", "body": "B", "folder": "C", "inReplyTo":"P", "epoch":"E", "thread":"X" }
-
-inReplyTo contains the message ID of the parent.
+You can combine the above filters - /unread/full *(should the order matter? - techno)*
 
 ## POST /folder/XYZ
 
@@ -143,26 +138,46 @@ Create a message in folder XYZ.
 
 You send:
 
-        { "subject": "S", "to": "T", "body": "B" }
+        { "subject":"foo", "to":"techno", "body":"bar baa" }
 
 You receive:
 
-        { "messageId": "I", "folder": "C", "epoch": "E", "thread": "X" }
+        { "id":"12345", "folder":"test1", "epoch":"1234567890", "thread":"23456" }
+
+Thread is an autosequenced ID.
+
+## GET /message/XYZ
+
+Get single message XYZ.
+
+You receive:
+
+        { "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874, "folder":"UA-Dev", "body":"Hmmm, yes. One of the server's two nameservers is down." }
 
 ## POST /message/XYZ
 
 Create a message in reply to message XYZ. 
 
-You send, minimally,
+You send, minimally:
 
-        { "body": "B" }
+        { "body":"B" }
 
-Or maximally, if you want to change to and/or subject,
+Or maximally, if you want to change to and/or subject:
 
-        { "body": "B", "to": "T", "subject": "S" }
+        { "subject":"foo", "to":"techno", "body":"bar baa" }
 
 You receive:
 
-        { "messageId": "I", "epoch": "E", "folder": "C", "thread": "X" }
+        { "id":"12346", "folder":"test1", "epoch":"1234567890", "thread":"23456" }
 
 to, subject, and thread default to the ones in XYZ. Note that any update to thread will be ignored.
+
+## GET /system
+
+Details about the system.
+
+You receive:
+
+        { "banner":"Hello, this is UA" }
+
+You can use this request without authentication.
