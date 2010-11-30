@@ -129,7 +129,7 @@ All messages in folder XYZ with bodies.
           ]
         }
 
-You can combine the above filters - /unread/full *(should the order matter? - techno)*
+You can combine filters and parameter e.g. GET folder/XYZ/unread/full *(should the order matter? - techno)*
 
 ## POST /folder/XYZ
 
