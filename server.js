@@ -1,5 +1,5 @@
 var sys = require('sys');
-var connect = require('connect');
+var connect = require('./connect/lib/connect/index');
 var fs = require('fs');
 var redisFactory = require('./redis-node-client/lib/redis-client');
 var Log = require('log'), log = new Log(Log.INFO);
