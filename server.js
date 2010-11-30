@@ -76,8 +76,11 @@ function canon_user(username) {
 
 // work out unread count for a folder for a user
 function get_folder_unread(folder, user_read, callback) {
-    redis.sdiff('folder:'+folder, user_read, function(e,v){
-        callback(undefined, {folder:folder, unread:v.length});
+    var c;
+    redis.scard('folder:'+folder, function(e, c){
+        redis.sdiff('folder:'+folder, user_read, function(e,v){
+            callback(undefined, {folder:folder, unread:v.length, count: c});
+        })
     });
 }
 
