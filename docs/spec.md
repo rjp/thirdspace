@@ -27,14 +27,14 @@ All folders you can access. This is the default, you can also use /folders/all e
 
 You receive:
         { "folders": [
-            { "name":"General", "unread":1, "messageCount":6 },
-            { "name":"UA", "messageCount":5 },
-            { "name":"New-Confs", "unread":3, "messageCount":4 },
+            { "name":"General", "unread":1, "count":6 },
+            { "name":"UA", "count":5 },
+            { "name":"New-Confs", "unread":3, "count":4 },
             ...
           ]
         }
 
-Message count is all the messages in a folder. Unread is zero if not present *(always include it? - techno)*.
+Count is all the messages in a folder. Unread is zero if not present *(always include it? - techno)*.
 
 ## GET /folders/subscribed
 
@@ -42,8 +42,8 @@ Subscribed folders (both read and unread).
 
 You receive:
         { "folders": [
-            { "name":"General", "unread":1, "messageCount":6 },
-            { "name":"UA", "messageCount":5 },
+            { "name":"General", "unread":1, "count":6 },
+            { "name":"UA", "count":5 },
             ...
           ]
         }
@@ -55,7 +55,7 @@ Subscribed folders (unread only).
 You receive:
 
         { "folders": [
-            { "name":"General", "unread":1, "messageCount":6 },
+            { "name":"General", "unread":1, "count":6 },
             ...
           ]
         }
@@ -92,7 +92,7 @@ All messages in folder XYZ without bodies. This is the default, you can also use
 
 You receive:
 
-        { "folder":"UA-Dev", "messageCount":20, "unread":10,
+        { "folder":"UA-Dev", "count":20, "unread":10,
           "messages": [
             { "id":2000874, "epoch":1289914330, "from":"Isvara", "subject":"DNS", "read":true },
             { "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874 },
@@ -109,7 +109,7 @@ Unread messages in folder XYZ without bodies.
 
 You receive:
 
-        { "folder":"UA-Dev", "messageCount":20, "unread":10,
+        { "folder":"UA-Dev", "count":20, "unread":10,
           "messages": [
             { "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874 },
             { "id":2000887, "epoch":1289914963, "from":"isoma", "to":"BW", "subject":"DNS", "inReplyTo":2000881 },
@@ -121,7 +121,7 @@ You receive:
 
 All messages in folder XYZ with bodies.
 
-        { "folder":"UA-Dev", "messageCount":20, "unread":10,
+        { "folder":"UA-Dev", "count":20, "unread":10,
           "messages": [
             { "id":2000874, "epoch":1289914330, "from":"Isvara", "subject":"DNS", "read":true, "body":"Is it broken? It seems very slow." },
             { "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874, "body":"Hmmm, yes. One of the server's two nameservers is down." },
