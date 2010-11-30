@@ -1,4 +1,4 @@
-This document is intended for guidance only and in no way represents a binding contract of functionality. Details are subject to alteration and correction without notice.
+*This document is intended for guidance only and in no way represents a binding contract of functionality. Details are subject to alteration and correction without notice.*
 
 UA3 Spec
 ========
