@@ -23,7 +23,7 @@ will be seen by Techno in Private but creating a new folder called "private" is 
 
 ## GET /folders
 
-All folders you can access.
+All folders you can access. This is the default, you can also use /folders/all explicitly.
 
 You receive:
         { "folders": [
@@ -88,7 +88,7 @@ You receive:
 
 ## GET /folder/XYZ
 
-All messages in folder XYZ without bodies. You can also use /folder/XYZ/all.
+All messages in folder XYZ without bodies. This is the default, you can also use /folder/XYZ/all explicitly.
 
 You receive:
 
