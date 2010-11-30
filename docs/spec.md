@@ -5,7 +5,7 @@ UA3 Spec
 
 UA3 presents a simple HTTP interface for reading and posting messages, wholists and other functions.
 
-All content is in JSON format (Content-Type: application/xml+ua3). Requests must be authenticated with HTTP authentication (see detailed spec for exceptions). Following a successful authentication attempt the server will return the "ua3session" cookie - you may use this cookie in lieu of the username / password combination for subsequent requests.
+All content is in JSON format (Content-Type: application/json). Requests must be authenticated with HTTP authentication (see detailed spec for exceptions). Following a successful authentication attempt the server will return the "ua3session" cookie - you may use this cookie in lieu of the username / password combination for subsequent requests.
 
 ## Some conventions
 
