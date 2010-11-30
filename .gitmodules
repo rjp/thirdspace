@@ -1,0 +1,6 @@
+[submodule "redis-node-client"]
+	path = redis-node-client
+	url = git://github.com/fictorial/redis-node-client.git
+[submodule "connect"]
+	path = connect
+	url = git://github.com/rjp/connect.git
