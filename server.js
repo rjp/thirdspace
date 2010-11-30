@@ -53,11 +53,53 @@ function buffer_to_strings(x) {
     return x;
 }
 
-function json_folders(req, res, err, authx) {
-    return '{"folders":"flanges"}';
+// perform asynchronous callbacks for each item in a list and then
+// pass the new list off to a final callback
+function map(list, each_callback, final_callback) {
+    var ilist = new Array;
+    var lsize = list.length;
+    var mid_callback = function(err, val){
+        if (err) final_callback(err, undefined);
+        ilist.push(val);
+        if (ilist.length == lsize) {
+            final_callback(undefined, ilist);
+	    }
+    };
+    for(var i in list) {
+        each_callback(list[i], i, mid_callback);
+    }
 }
 
-function json_folder(req, res, err, authx) {
+function canon_user(username) {
+    return username.toLowerCase().replace(/[^a-z0-9]/, '_');
+}
+
+// work out unread count for a folder for a user
+function get_folder_unread(folder, user_read, callback) {
+    redis.sdiff('folder:'+folder, user_read, function(e,v){
+        callback(undefined, {folder:folder, unread:v.length});
+    });
+}
+
+function json_folders(req, res, err, auth) {
+    var c_user = 'user:' + canon_user(auth);
+    var k_subs = c_user + ':subs';
+    var k_read = c_user + ':read';
+    redis.smembers(k_subs, function(err, subs) {
+        var r = [];
+        if(err) { throw(err); } // TODO fix this up
+        buffer_to_strings(subs); 
+        map(subs, function(f, i, c) {
+                get_folder_unread(f, k_read, c);
+            }, function(e, newlist) {
+                res.writeHead(200, {'Content-Type':'application/json'});
+                res.end(JSON.stringify(newlist));
+            }
+        );
+    });
+}
+
+function json_folder(req, res, err, auth) {
     var o = { folder: req.params.name };
     if (req.params.extra) {
         o.extra = req.params.extra;
@@ -71,9 +113,8 @@ function makeHandler(name, after_auth) {
         req.authenticate(['basic'], function(err, authx){
             var auth = req.getAuthDetails().user.username;
             log.info('AUTHENTICATED AS '+auth);
-            res.writeHead(200, {'Content-Type':'application/json'});
-            // dump whatever we get back to the browser
-            res.end(after_auth(req, res, err, authx));
+            // callback handles headers and content
+            after_auth(req, res, err, auth);
         })
     };
 }
