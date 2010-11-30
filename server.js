@@ -1,6 +1,6 @@
 var sys = require('sys');
-var connect = require('./connect/lib/connect/index');
 var fs = require('fs');
+var connect = require('./connect/lib/connect/index');
 var redisFactory = require('./redis-node-client/lib/redis-client');
 var Log = require('log'), log = new Log(Log.INFO);
 
@@ -134,7 +134,9 @@ function folder(app) {
     app.get('/:name', function(req, res, next){
         json_folder(req, res, req.remoteUser);
     });
-    //app.get('/:name/:extra', json_folder);
+    app.get('/:name/:extra', function(req, res, next){
+        json_folder(req, res, req.remoteUser);
+    });
 }
 
 function folders(app) {
