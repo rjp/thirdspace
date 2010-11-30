@@ -28,9 +28,9 @@ All folders you can access. This is the default, you can also use /folders/all e
 You receive a list:
 
         [
-          { "name":"General", "unread":1, "count":6 },
-          { "name":"UA", "count":5 },
-          { "name":"New-Confs", "unread":3, "count":4 },
+          { "folder":"General", "unread":1, "count":6 },
+          { "folder":"UA", "count":5 },
+          { "folder":"New-Confs", "unread":3, "count":4 },
           ...
         ]
 
@@ -43,8 +43,8 @@ Subscribed folders (both read and unread).
 You receive a list:
 
         [
-          { "name":"General", "unread":1, "count":6 },
-          { "name":"UA", "count":5 },
+          { "folder":"General", "unread":1, "count":6 },
+          { "folder":"UA", "count":5 },
           ...
         ]
 
@@ -55,7 +55,7 @@ Subscribed folders with unread messages.
 You receive a list:
 
         [
-          { "name":"General", "unread":1, "count":6 },
+          { "folder":"General", "unread":1, "count":6 },
           ...
         ]
 
@@ -67,11 +67,11 @@ Subscribe to folder XYZ
 
 You send:
 
-        { "name":"A" }
+        { "folder":"A" }
 
 You receive:
 
-        { "name":"A" }
+        { "folder":"A" }
 
 ## POST /folder/XYZ/unsubscribe
 
@@ -79,11 +79,11 @@ Unsubscribe from folder XYZ
 
 You send:
 
-        { "name":"A" }
+        { "folder":"A" }
 
 You receive:
 
-        { "name":"A" }
+        { "folder":"A" }
 
 ## GET /folder/XYZ
 
@@ -91,14 +91,12 @@ All messages in folder XYZ without bodies. This is the default, you can also use
 
 You receive:
 
-        { "folder":"UA-Dev", "count":20, "unread":10,
-          "messages": [
-            { "id":2000874, "epoch":1289914330, "from":"Isvara", "subject":"DNS", "read":true },
-            { "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874 },
-            { "id":2000887, "epoch":1289914963, "from":"isoma", "to":"BW", "subject":"DNS", "inReplyTo":2000881 },
-            ...
-          ]
-        }
+        [
+          { "id":2000874, "epoch":1289914330, "from":"Isvara", "subject":"DNS", "read":true },
+          { "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874 },
+          { "id":2000887, "epoch":1289914963, "from":"isoma", "to":"BW", "subject":"DNS", "inReplyTo":2000881 },
+          ...
+        ]
 
 inReplyTo contains the message ID of the immediate parent.
 
@@ -108,26 +106,22 @@ Unread messages in folder XYZ without bodies.
 
 You receive:
 
-        { "folder":"UA-Dev", "count":20, "unread":10,
-          "messages": [
-            { "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874 },
-            { "id":2000887, "epoch":1289914963, "from":"isoma", "to":"BW", "subject":"DNS", "inReplyTo":2000881 },
-            ...
-          ]
-        }
+        [
+          { "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874 },
+          { "id":2000887, "epoch":1289914963, "from":"isoma", "to":"BW", "subject":"DNS", "inReplyTo":2000881 },
+          ...
+        ]
 
 ## GET /folder/XYZ/full
 
 All messages in folder XYZ with bodies.
 
-        { "folder":"UA-Dev", "count":20, "unread":10,
-          "messages": [
-            { "id":2000874, "epoch":1289914330, "from":"Isvara", "subject":"DNS", "read":true, "body":"Is it broken? It seems very slow." },
-            { "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874, "body":"Hmmm, yes. One of the server's two nameservers is down." },
-            { "id":2000887, "epoch":1289914963, "from":"isoma", "to":"BW", "subject":"DNS", "inReplyTo":2000881, "body":"Install unbound locally? It's very light on memory." },
-            ...
-          ]
-        }
+        [
+          { "id":2000874, "epoch":1289914330, "from":"Isvara", "subject":"DNS", "read":true, "body":"Is it broken? It seems very slow." },
+          { "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874, "body":"Hmmm, yes. One of the server's two nameservers is down." },
+          { "id":2000887, "epoch":1289914963, "from":"isoma", "to":"BW", "subject":"DNS", "inReplyTo":2000881, "body":"Install unbound locally? It's very light on memory." },
+          ...
+        ]
 
 You can combine filters and parameter e.g. GET folder/XYZ/unread/full *(should the order matter? - techno)*
 
