@@ -18,11 +18,6 @@ var server = connect.createServer(
 
 server.use(connect.basicAuth(authenticate, 'ua3'));
 
-function folders(app) {
-    app.get('/', function(req, res, next){
-        json_folders(req, res, req.remoteUser);
-    });
-}
 // this should probably be smarter
 function authenticate(user, pass, success, failure) {
     log.info('pass is '+pass);
@@ -53,6 +48,11 @@ function buffer_to_strings(x) {
 // perform asynchronous callbacks for each item in a list and then
 // pass the new list off to a final callback
 function map(list, each_callback, final_callback) {
+    // shortcut any processing if we've got an empty list
+    if (list === undefined || list === null || list.length === 0) {
+        final_callback(undefined, []);
+        return;
+    }
     var ilist = new Array;
     var lsize = list.length;
     var mid_callback = function(err, val){
@@ -69,6 +69,16 @@ function map(list, each_callback, final_callback) {
 
 function canon_user(username) {
     return username.toLowerCase().replace(/[^a-z0-9]/, '_');
+}
+
+function canon_folder(foldername) {
+    return foldername.toLowerCase().replace(/[^a-z0-9]/, '_');
+}
+
+function error(req, res, message) {
+    var ejson = { error: message };
+    res.writeHead(500, {'Content-Type':'application/json'});
+    res.end(JSON.stringify(ejson));
 }
 
 // work out unread count for a folder for a user
@@ -101,33 +111,40 @@ function json_folders(req, res, auth) {
     });
 }
 
-function json_folder(req, res, err, auth) {
-    var o = { folder: req.params.name };
-    if (req.params.extra) {
-        o.extra = req.params.extra;
-    }
-    return JSON.stringify(o);
-}
+function json_folder(req, res, auth) {
+    var c_user = 'user:' + canon_user(auth);
+    var c_folder = canon_folder(req.params.name);
+    var k_subs = c_user + ':subs';
+    var k_read = c_user + ':read';
 
-
-function makeHandler(name, after_auth) {
-    return function(req, res){
-        req.authenticate(['basic'], function(err, authx){
-            var auth = req.getAuthDetails().user.username;
-            log.info('AUTHENTICATED AS '+auth);
-            // callback handles headers and content
-            after_auth(req, res, err, auth);
-        })
-    };
+    redis.exists('folder:'+c_folder, function(e, v){
+        if(v === 0) {
+            error(req, res, "No such folder:"+c_folder);
+            return;
+        }
+        get_folder_unread(c_folder, 0, function(e, f){
+            res.writeHead(200, {'Content-Type':'application/json'});
+            res.end(JSON.stringify(f));
+        });
+    });
 }
 
 // finally, our actual routing table
-function pending(app) {
-    app.get('/folder/:name', makeHandler('folder/name', json_folder));
-    app.get('/folder/:name/:extra', makeHandler('folder/name', json_folder));
+function folder(app) {
+    app.get('/:name', function(req, res, next){
+        json_folder(req, res, req.remoteUser);
+    });
+    //app.get('/:name/:extra', json_folder);
+}
+
+function folders(app) {
+    app.get('/', function(req, res, next){
+        json_folders(req, res, req.remoteUser);
+    });
 }
 
 server.use('/folders', connect.router(folders));
+server.use('/folder', connect.router(folder));
 
 server.listen(config.port);
 log.info('Connect server listening on port '+config.port);
