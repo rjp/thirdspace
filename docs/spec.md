@@ -92,9 +92,9 @@ All messages in folder XYZ without bodies. This is the default, you can also use
 You receive:
 
         [
-          { "id":2000874, "epoch":1289914330, "from":"Isvara", "subject":"DNS", "read":true },
-          { "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874 },
-          { "id":2000887, "epoch":1289914963, "from":"isoma", "to":"BW", "subject":"DNS", "inReplyTo":2000881 },
+          { "folder":"UA-Dev", "id":2000874, "epoch":1289914330, "from":"Isvara", "subject":"DNS", "read":true },
+          { "folder":"UA-Dev", "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874 },
+          { "folder":"UA-Dev", "id":2000887, "epoch":1289914963, "from":"isoma", "to":"BW", "subject":"DNS", "inReplyTo":2000881 },
           ...
         ]
 
@@ -107,8 +107,8 @@ Unread messages in folder XYZ without bodies.
 You receive:
 
         [
-          { "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874 },
-          { "id":2000887, "epoch":1289914963, "from":"isoma", "to":"BW", "subject":"DNS", "inReplyTo":2000881 },
+          { "folder":"UA-Dev", "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874 },
+          { "folder":"UA-Dev", "id":2000887, "epoch":1289914963, "from":"isoma", "to":"BW", "subject":"DNS", "inReplyTo":2000881 },
           ...
         ]
 
@@ -117,9 +117,9 @@ You receive:
 All messages in folder XYZ with bodies.
 
         [
-          { "id":2000874, "epoch":1289914330, "from":"Isvara", "subject":"DNS", "read":true, "body":"Is it broken? It seems very slow." },
-          { "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874, "body":"Hmmm, yes. One of the server's two nameservers is down." },
-          { "id":2000887, "epoch":1289914963, "from":"isoma", "to":"BW", "subject":"DNS", "inReplyTo":2000881, "body":"Install unbound locally? It's very light on memory." },
+          { "folder":"UA-Dev", "id":2000874, "epoch":1289914330, "from":"Isvara", "subject":"DNS", "read":true, "body":"Is it broken? It seems very slow." },
+          { "folder":"UA-Dev", "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874, "body":"Hmmm, yes. One of the server's two nameservers is down." },
+          { "folder":"UA-Dev", "id":2000887, "epoch":1289914963, "from":"isoma", "to":"BW", "subject":"DNS", "inReplyTo":2000881, "body":"Install unbound locally? It's very light on memory." },
           ...
         ]
 
@@ -145,7 +145,7 @@ Get single message XYZ.
 
 You receive:
 
-        { "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874, "folder":"UA-Dev", "body":"Hmmm, yes. One of the server's two nameservers is down." }
+        { "folder":"UA-Dev", "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874, "body":"Hmmm, yes. One of the server's two nameservers is down." }
 
 ## POST /message/XYZ
 
