@@ -25,42 +25,41 @@ will be seen by Techno in Private but creating a new folder called "private" is 
 
 All folders you can access. This is the default, you can also use /folders/all explicitly.
 
-You receive:
-        { "folders": [
-            { "name":"General", "unread":1, "count":6 },
-            { "name":"UA", "count":5 },
-            { "name":"New-Confs", "unread":3, "count":4 },
-            ...
-          ]
-        }
+You receive a list:
 
-Count is all the messages in a folder. Unread is zero if not present *(always include it? - techno)*.
+        [
+          { "name":"General", "unread":1, "count":6 },
+          { "name":"UA", "count":5 },
+          { "name":"New-Confs", "unread":3, "count":4 },
+          ...
+        ]
+
+Count is all the messages in a folder. If not present count and unread can be assumed to be zero *(always include it? - techno)*.
 
 ## GET /folders/subscribed
 
 Subscribed folders (both read and unread).
 
-You receive:
-        { "folders": [
-            { "name":"General", "unread":1, "count":6 },
-            { "name":"UA", "count":5 },
-            ...
-          ]
-        }
+You receive a list:
+
+        [
+          { "name":"General", "unread":1, "count":6 },
+          { "name":"UA", "count":5 },
+          ...
+        ]
 
 ## GET /folders/unread
 
-Subscribed folders (unread only).
+Subscribed folders with unread messages.
 
-You receive:
+You receive a list:
 
-        { "folders": [
-            { "name":"General", "unread":1, "count":6 },
-            ...
-          ]
-        }
+        [
+          { "name":"General", "unread":1, "count":6 },
+          ...
+        ]
 
-Because unread implies subscribed you can do /all/unread to remove the filter.
+You can remove the implied filter by using GET folders/all/unread.
 
 ## POST /folder/XYZ/subscribe
 
