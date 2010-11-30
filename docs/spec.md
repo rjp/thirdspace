@@ -1,9 +1,11 @@
+This document is intended for guidance only and in no way represents a binding contract of functionality. Details are subject to alteration and correction without notice.
+
 UA3 Spec
 ========
 
 UA3 presents a simple HTTP interface for reading and posting messages.
 
-All calls accept and return JSON and must be authenticated with HTTP authentication. 
+All content is in JSON format (specifically MIME type application/xml+ua3) and must be authenticated with HTTP authentication (the only exception to this is GET /system/banner). Following a successful authentication attempt the server will return the "ua3session" cookie - you may use this cookie in lieu of the username / password combination for subsequent requests.
 
 ## Some conventions
 
