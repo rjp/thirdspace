@@ -89,7 +89,7 @@ You receive:
 
 All messages in folder XYZ without bodies. This is the default, you can also use /folder/XYZ/all explicitly.
 
-You receive:
+You receive a list:
 
         [
           { "folder":"UA-Dev", "id":2000874, "epoch":1289914330, "from":"Isvara", "subject":"DNS", "read":true },
@@ -104,7 +104,7 @@ inReplyTo contains the message ID of the immediate parent.
 
 Unread messages in folder XYZ without bodies.
 
-You receive:
+You receive a list:
 
         [
           { "folder":"UA-Dev", "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874 },
@@ -115,6 +115,8 @@ You receive:
 ## GET /folder/XYZ/full
 
 All messages in folder XYZ with bodies.
+
+You receive a list:
 
         [
           { "folder":"UA-Dev", "id":2000874, "epoch":1289914330, "from":"Isvara", "subject":"DNS", "read":true, "body":"Is it broken? It seems very slow." },
@@ -155,15 +157,27 @@ You send, minimally:
 
         { "body":"B" }
 
-Or maximally, if you want to change to and/or subject:
+Or maximally:
 
-        { "subject":"foo", "to":"techno", "body":"bar baa" }
+        { "folder":"test1", "subject":"foo", "to":"techno", "body":"bar baa" }
 
 You receive:
 
         { "id":"12346", "folder":"test1", "epoch":"1234567890", "thread":"23456" }
 
-to, subject, and thread default to the ones in XYZ. Note that any update to thread will be ignored.
+to and subject default to the ones in XYZ. Attempts to change thread will be ignored.
+
+## POST /message/read
+
+Mark message(s) as read.
+
+You send a list:
+
+        [ 123, 456, 789 ]
+
+You receive:
+
+        { "count":3 }
 
 ## GET /system
 
