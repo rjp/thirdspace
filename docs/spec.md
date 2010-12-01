@@ -5,7 +5,9 @@ UA3 Spec
 
 UA3 presents a simple HTTP interface for reading and posting messages, wholists and other functions.
 
-All content is in JSON format (Content-Type: application/json). Requests must be authenticated with HTTP authentication (see detailed spec for exceptions). Following a successful authentication attempt the server will return the "ua3session" cookie - you may use this cookie in lieu of the username / password combination for subsequent requests.
+All content is in JSON format (Content-Type: application/json). Requests must be authenticated with HTTP authentication.
+
+Successful calls will get a 200 status code. Anything else will get a 500 and an error message returned as JSON.
 
 ## Some conventions
 
@@ -13,7 +15,7 @@ All content is in JSON format (Content-Type: application/json). Requests must be
 
 Where a value appears in quotes it represents a string. Where a value does not appear in quotes it represents a number or a boolean (true|false).
 
-Users and folders are keyed by lower-cased name. Names are case insensitive in this context but mixed case is still supported in the actual definition, so
+Users and folders are keyed by lower-cased name with non-alphanums convert to underscores. Data sent to the server must be in this format. Names and folders can be displayed in whatever mixed-case is required.
 
         POST /folder/private
         
@@ -23,7 +25,7 @@ will be seen by Techno in Private but creating a new folder called "private" is 
 
 ## GET /folders
 
-All folders you can access. This is the default, you can also use /folders/all explicitly.
+All folders you can access.
 
 You receive a list:
 
@@ -34,30 +36,15 @@ You receive a list:
           ...
         ]
 
-Count is all the messages in a folder. If not present count and unread can be assumed to be zero *(always include it? - techno)*.
+Count is all the non-expired messages in a folder. Count and Unread will always be present, even if 0.
 
 ## GET /folders/subscribed
 
-Subscribed folders (both read and unread).
-
-You receive a list:
-
-        [
-          { "folder":"General", "unread":1, "count":6 },
-          { "folder":"UA", "count":5 },
-          ...
-        ]
+Identical to /folders but restricted to subscribed folders.
 
 ## GET /folders/unread
 
-Subscribed folders with unread messages.
-
-You receive a list:
-
-        [
-          { "folder":"General", "unread":1, "count":6 },
-          ...
-        ]
+Identical to /folders but restricted to subscribed folders with unread messages.
 
 You can remove the implied filter by using GET folders/all/unread.
 
@@ -87,7 +74,7 @@ You receive:
 
 ## GET /folder/XYZ
 
-All messages in folder XYZ without bodies. This is the default, you can also use /folder/XYZ/all explicitly.
+All messages in folder XYZ without bodies. 
 
 You receive a list:
 
@@ -102,30 +89,11 @@ inReplyTo contains the message ID of the immediate parent.
 
 ## GET /folder/XYZ/unread
 
-Unread messages in folder XYZ without bodies.
-
-You receive a list:
-
-        [
-          { "folder":"UA-Dev", "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874 },
-          { "folder":"UA-Dev", "id":2000887, "epoch":1289914963, "from":"isoma", "to":"BW", "subject":"DNS", "inReplyTo":2000881 },
-          ...
-        ]
+Unread messages in folder XYZ without bodies. Same return format as /folder/XYZ.
 
 ## GET /folder/XYZ/full
 
-All messages in folder XYZ with bodies.
-
-You receive a list:
-
-        [
-          { "folder":"UA-Dev", "id":2000874, "epoch":1289914330, "from":"Isvara", "subject":"DNS", "read":true, "body":"Is it broken? It seems very slow." },
-          { "folder":"UA-Dev", "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874, "body":"Hmmm, yes. One of the server's two nameservers is down." },
-          { "folder":"UA-Dev", "id":2000887, "epoch":1289914963, "from":"isoma", "to":"BW", "subject":"DNS", "inReplyTo":2000881, "body":"Install unbound locally? It's very light on memory." },
-          ...
-        ]
-
-You can combine filters and parameter e.g. GET folder/XYZ/unread/full *(should the order matter? - techno)*
+All non-expired messages in folder XYZ with bodies.
 
 ## POST /folder/XYZ
 
@@ -181,10 +149,4 @@ You receive:
 
 ## GET /system
 
-Details about the system.
-
-You receive:
-
-        { "banner":"Hello, this is UA" }
-
-You can use this request without authentication.
+Details about the system. It will not include a banner.
