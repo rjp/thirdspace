@@ -129,13 +129,28 @@ function json_folder(req, res, auth) {
     });
 }
 
-// finally, our actual routing table
+// finally, our actual routing tables
+
+function folder_private(app) {
+    app.get('/', function(req, res, next){
+        json_private_folder(req, res, req.remoteUser);
+    });
+    app.get('/:extra', function(req, res, next){
+        json_private_folder(req, res, req.remoteUser);
+    });
+    app.post('/', function(req, res, next){
+        post_private(req, res, req.remoteUser);
+    });
+}
 function folder(app) {
     app.get('/:name', function(req, res, next){
         json_folder(req, res, req.remoteUser);
     });
     app.get('/:name/:extra', function(req, res, next){
         json_folder(req, res, req.remoteUser);
+    });
+    app.post('/:name', function(req, res, next){
+        post_folder(req, res, req.remoteUser);
     });
 }
 
@@ -146,6 +161,7 @@ function folders(app) {
 }
 
 server.use('/folders', connect.router(folders));
+server.use('/folder/private', connect.router(folder_private));
 server.use('/folder', connect.router(folder));
 
 server.listen(config.port);
