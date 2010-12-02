@@ -147,6 +147,38 @@ You receive:
 
         { "count":3 }
 
+count is the number of messages marked as read.
+
+## POST /message/unread
+
+Mark message(s) as unread. Same format as /read.
+
+## GET /thread/XYZ
+
+Get messages in thread XYZ without bodies. Same return format as /folder/XYZ.
+
+## GET /thread/XYZ/full
+
+Get messages in thread XYZ with bodies. Same return format as /folder/XYZ.
+
+## POST /thread/XYZ/read
+
+Mark all messages in thread(s) as read.
+
+You send a list:
+
+        [ 1001, 1002, 1003 ]
+
+You receive:
+
+        { "count":20 }
+
+count is the number of messages marked as read.
+
+## POST /thread/unread
+
+Mark all messages thread(s) as unread. Same format as /read.
+
 ## GET /system
 
 Details about the system. It will not include a banner.
