@@ -148,7 +148,7 @@ You receive:
         { "count":3 }
 
 count is the number of messages marked as read.
-*(what about "stay caught up"? - techno)
+*(what about "stay caught up"? - techno)*
 
 ## POST /message/unread
 
@@ -175,7 +175,7 @@ You receive:
         { "count":20 }
 
 count is the number of messages marked as read.
-*(what about "stay caught up"? - techno)
+*(what about "stay caught up"? - techno)*
 
 ## POST /thread/unread
 
