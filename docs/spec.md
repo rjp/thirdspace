@@ -89,7 +89,7 @@ inReplyTo contains the message ID of the immediate parent.
 
 ## GET /folder/XYZ/unread
 
-Unread messages in folder XYZ without bodies. Same return format as /folder/XYZ.
+Unread messages in folder XYZ without bodies. Same response format as /folder/XYZ.
 
 ## GET /folder/XYZ/full
 
@@ -148,6 +148,7 @@ You receive:
         { "count":3 }
 
 count is the number of messages marked as read.
+*(what about "stay caught up"? - techno)
 
 ## POST /message/unread
 
@@ -155,7 +156,7 @@ Mark message(s) as unread. Same format as /read.
 
 ## GET /thread/XYZ
 
-Get messages in thread XYZ without bodies. Same return format as /folder/XYZ.
+Get messages in thread XYZ without bodies. Same response format as /folder/XYZ.
 
 ## GET /thread/XYZ/full
 
@@ -174,6 +175,7 @@ You receive:
         { "count":20 }
 
 count is the number of messages marked as read.
+*(what about "stay caught up"? - techno)
 
 ## POST /thread/unread
 
