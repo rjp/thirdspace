@@ -71,8 +71,16 @@ function canon_user(username) {
     return username.toLowerCase().replace(/[^a-z0-9]/, '_');
 }
 
+function k_user(username, subkey) {
+    return 'user:'+canon_user(username)+':'+subkey;
+}
+
 function canon_folder(foldername) {
     return foldername.toLowerCase().replace(/[^a-z0-9]/, '_');
+}
+
+function k_folder(foldername) {
+    return 'folder:'+canon_folder(foldername);
 }
 
 function error(req, res, message) {
@@ -84,9 +92,9 @@ function error(req, res, message) {
 // work out unread count for a folder for a user
 function get_folder_unread(folder, user_read, callback) {
     var c;
-    redis.scard('folder:'+folder, function(e, c){
+    redis.scard(k_folder(folder), function(e, c){
         if (e) throw(e);
-        redis.sdiff('folder:'+folder, user_read, function(e,v){
+        redis.sdiff(k_folder(folder), user_read, function(e,v){
             if (e) throw(e);
             callback(undefined, {folder:folder, unread:v.length, count: c});
         })
@@ -94,9 +102,8 @@ function get_folder_unread(folder, user_read, callback) {
 }
 
 function json_folders(req, res, auth) {
-    var c_user = 'user:' + canon_user(auth);
-    var k_subs = c_user + ':subs';
-    var k_read = c_user + ':read';
+    var k_subs = k_user(auth, 'subs');
+    var k_read = k_user(auth, 'read');
     redis.smembers(k_subs, function(err, subs) {
         var r = [];
         if(err) { throw(err); } // TODO fix this up
@@ -112,17 +119,16 @@ function json_folders(req, res, auth) {
 }
 
 function json_folder(req, res, auth) {
-    var c_user = 'user:' + canon_user(auth);
-    var c_folder = canon_folder(req.params.name);
-    var k_subs = c_user + ':subs';
-    var k_read = c_user + ':read';
+    var folder = canon_folder(req.params.name);
+    var k_subs = k_user(auth, 'subs');
+    var k_read = k_user(auth, 'read');
 
-    redis.exists('folder:'+c_folder, function(e, v){
+    redis.exists(k_folder(folder), function(e, v){
         if(v === 0) {
             error(req, res, "No such folder:"+c_folder);
             return;
         }
-        get_folder_unread(c_folder, 0, function(e, f){
+        get_folder_unread(folder, 0, function(e, f){
             res.writeHead(200, {'Content-Type':'application/json'});
             res.end(JSON.stringify(f));
         });
