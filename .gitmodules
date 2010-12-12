@@ -4,3 +4,6 @@
 [submodule "connect"]
 	path = connect
 	url = git://github.com/rjp/connect.git
+[submodule "redis-node"]
+	path = redis-node
+	url = git://github.com/bnoguchi/redis-node.git
