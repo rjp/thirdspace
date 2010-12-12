@@ -2,7 +2,7 @@ var sys = require('sys');
 var fs = require('fs');
 var connect = require('./connect/lib/connect/index');
 var redisFactory = require('./redis-node-client/lib/redis-client');
-var Log = require('log'), log = new Log(Log.INFO);
+var Log = require('log'), log = new Log(Log.WARNING);
 
 // default redis host and port - TODO get this from config?
 var redis = redisFactory.createClient();
