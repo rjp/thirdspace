@@ -4,14 +4,15 @@ var ua3 = require('../server');
 var tester = require('../httpclient');
 var sys = require('sys');
 
-var myfolders = JSON.parse('[{"folder":"chat","unread":3,"count":5},{"folder":"mine","unread":1,"count":2}]');
+var myfolders = JSON.parse('[{"folder":"chat","unread":3,"count":5,"sub":1},{"folder":"mine","unread":1,"count":2, "sub":1}]');
+var allfolders = JSON.parse('[{"folder":"chat","unread":3,"count":5,"sub":1},{"folder":"mine","unread":1,"count":2, "sub":1},{"folder":"test","unread":3,"count":3,"sub":0}]');
 
 ua3.startup();
 
 exports['folders'] = function(test){
     var body = "";
-    test.expect(1);
-    tester.request('/folders', function(got){
+    tester.get('/folders', function(got){
+        test.expect(1);
         test.deepEqual(got, myfolders, "Folders");
         test.done();
     });

@@ -87,20 +87,24 @@ function k_folder(foldername) {
     return 'folder:'+canon_folder(foldername);
 }
 
-function error(req, res, message) {
+function error(req, res, message, code) {
     var ejson = { error: message };
-    res.writeHead(500, {'Content-Type':'application/json'});
+    if (code === undefined) { code = 500; }
+    res.writeHead(code, {'Content-Type':'application/json'});
     res.end(JSON.stringify(ejson));
 }
 
 // work out unread count for a folder for a user
-function get_folder_unread(folder, user_read, callback) {
+function get_folder_unread(folder, user, callback) {
     var c;
-    redis.scard(k_folder(folder), function(e, c){
-        if (e) throw(e);
-        redis.sdiff(k_folder(folder), user_read, function(e,v){
+    redis.sismember(k_user(user, 'subs'), canon_folder(folder), function(e, s){
+        redis.scard(k_folder(folder), function(e, c){
             if (e) throw(e);
-            callback(undefined, {folder:folder, unread:v.length, count: c});
+            redis.sdiff(k_folder(folder), k_user(user, 'read'), function(e,v){
+                if (e) throw(e);
+                callback(undefined, 
+                    {folder:folder, unread:v.length, count: c, sub: s});
+            })
         })
     });
 }
@@ -113,7 +117,7 @@ function json_folders(req, res, auth) {
         if(err) { throw(err); } // TODO fix this up
         buffer_to_strings(subs); 
         map(subs, function(f, i, c) {
-                get_folder_unread(f, k_read, c);
+                get_folder_unread(f, auth, c);
             }, function(e, newlist) {
                 res.writeHead(200, {'Content-Type':'application/json'});
                 res.end(JSON.stringify(newlist));
@@ -122,17 +126,29 @@ function json_folders(req, res, auth) {
     });
 }
 
+function subscribe_folder(req, res, auth) {
+    var folder = req.params.name;
+    redis.exists(k_folder(folder), function(e, v){
+        if(!v) {
+            error(req, res, "No such folder:"+folder, 404);
+            return;
+        }
+        res.writeHead(200, {'Content-Type':'application/json'});
+        res.end(JSON.stringify({"folder":folder}));
+    });
+}
+
 function json_folder(req, res, auth) {
-    var folder = canon_folder(req.params.name);
+    var folder = req.params.name;
     var k_subs = k_user(auth, 'subs');
     var k_read = k_user(auth, 'read');
 
     redis.exists(k_folder(folder), function(e, v){
-        if(v === 0) {
-            error(req, res, "No such folder:"+c_folder);
+        if(!v) {
+            error(req, res, "No such folder:"+folder, 404);
             return;
         }
-        get_folder_unread(folder, k_read, function(e, f){
+        get_folder_unread(folder, auth, function(e, f){
             res.writeHead(200, {'Content-Type':'application/json'});
             res.end(JSON.stringify(f));
         });
@@ -158,6 +174,12 @@ function folder(app) {
     });
     app.get('/:name/:extra', function(req, res, next){
         json_folder(req, res, req.remoteUser);
+    });
+    app.post('/private/subscribe', function(req, res, next) {
+        error(req, res, "Cannot resubscribe to private", 500);
+    });
+    app.post('/:name/subscribe', function(req, res, next){
+        subscribe_folder(req, res, req.remoteUser);
     });
     app.post('/:name', function(req, res, next){
         post_folder(req, res, req.remoteUser);
