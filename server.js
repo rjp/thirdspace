@@ -8,8 +8,13 @@ var Log = require('log'), log = new Log(Log.INFO);
 var redis = redisFactory.createClient();
 
 // nice to have configuration in a distinct place
-var config_json = fs.readFileSync(process.argv[2], 'utf8');
-var config = JSON.parse(config_json);
+var config;
+try {
+    var config_json = fs.readFileSync(process.argv[2], 'utf8');
+    config = JSON.parse(config_json);
+} catch(e) {
+    config = {"port":3000}
+}
 
 // create a bogstandard authenticating connect server
 var server = connect.createServer(
@@ -166,10 +171,11 @@ function folders(app) {
     });
 }
 
-server.use('/folders', connect.router(folders));
-server.use('/folder/private', connect.router(folder_private));
-server.use('/folder', connect.router(folder));
-
-server.listen(config.port);
-log.info('Connect server listening on port '+config.port);
-
+exports.startup = function() {
+	server.use('/folders', connect.router(folders));
+	server.use('/folder/private', connect.router(folder_private));
+	server.use('/folder', connect.router(folder));
+	
+	server.listen(config.port);
+	log.info('Connect server listening on port '+config.port);
+}
