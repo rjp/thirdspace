@@ -1,0 +1,19 @@
+select 2
+flushdb
+set auth:rjp moose
+sadd folder:chat 1
+sadd folder:chat 2
+sadd folder:chat 4
+sadd folder:chat 7
+sadd folder:chat 8
+sadd folder:test 3
+sadd folder:test 5
+sadd folder:test 6
+sadd folder:mine 9
+sadd folder:mine 0
+sadd user:rjp:subs chat
+sadd user:rjp:subs mine
+sadd user:rjp:read 1
+sadd user:rjp:read 2
+sadd user:rjp:read 9
+
