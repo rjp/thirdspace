@@ -1,11 +1,8 @@
 var sys = require('sys');
 var fs = require('fs');
 var connect = require('./connect/lib/connect/index');
-var redisFactory = require('./redis-node-client/lib/redis-client');
+var redisFactory = require('./redis-node/lib/redis');
 var Log = require('log'), log = new Log(Log.WARNING);
-
-// default redis host and port - TODO get this from config?
-var redis = redisFactory.createClient();
 
 // nice to have configuration in a distinct place
 var config;
@@ -13,8 +10,10 @@ try {
     var config_json = fs.readFileSync(process.argv[2], 'utf8');
     config = JSON.parse(config_json);
 } catch(e) {
-    config = {"port":3000}
+    config = {"port":3000,"redisport":6379, "redisdb":2}
 }
+
+var redis = redisFactory.createClient(config.redisport);
 
 // create a bogstandard authenticating connect server
 var server = connect.createServer(
@@ -133,7 +132,7 @@ function json_folder(req, res, auth) {
             error(req, res, "No such folder:"+c_folder);
             return;
         }
-        get_folder_unread(folder, 0, function(e, f){
+        get_folder_unread(folder, k_read, function(e, f){
             res.writeHead(200, {'Content-Type':'application/json'});
             res.end(JSON.stringify(f));
         });
@@ -176,6 +175,7 @@ exports.startup = function() {
 	server.use('/folder/private', connect.router(folder_private));
 	server.use('/folder', connect.router(folder));
 	
+    redis.select(config.redisdb,function(){});
 	server.listen(config.port);
 	log.info('Connect server listening on port '+config.port);
 }
