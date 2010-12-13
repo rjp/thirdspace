@@ -13,6 +13,10 @@ try {
     config = {"port":3000,"redisport":6379, "redisdb":2}
 }
 
+if (process.env.redisport !== undefined) {
+    config.redisport = parseInt(process.env.redisport);
+}
+
 var redis = redisFactory.createClient(config.redisport);
 
 // create a bogstandard authenticating connect server
