@@ -11,4 +11,3 @@ rdbcompression yes
 dbfilename testjunknull.rdb
 appendonly no
 glueoutputbuf yes
-shareobjects no
