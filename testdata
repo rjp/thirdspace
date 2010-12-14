@@ -16,4 +16,3 @@ sadd user:rjp:subs mine
 sadd user:rjp:read 1
 sadd user:rjp:read 2
 sadd user:rjp:read 9
-shutdown
