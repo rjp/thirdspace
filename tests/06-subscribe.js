@@ -3,8 +3,7 @@ var http = require('http');
 var ua3 = require('../server');
 var tester = require('../httpclient');
 var sys = require('sys');
-
-var myfolders = JSON.parse('{"chat":{"folder":"chat","unread":3,"count":5},"mine":{"unread":1,"count":2,"folder":"mine"}}');
+var testdata = require('../testdata.js');
 
 exports['subscribe-private'] = function(test){
     var body = "";

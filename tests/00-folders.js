@@ -2,15 +2,14 @@ var assert = require('assert');
 var http = require('http');
 var tester = require('../httpclient');
 var sys = require('sys');
-
-var myfolders = JSON.parse('[{"folder":"chat","unread":3,"count":5,"sub":1},{"folder":"mine","unread":1,"count":2, "sub":1}]');
-var allfolders = JSON.parse('[{"folder":"chat","unread":3,"count":5,"sub":1},{"folder":"mine","unread":1,"count":2, "sub":1},{"folder":"test","unread":3,"count":3,"sub":0}]');
+var testdata = require('../testdata.js');
 
 exports['folders'] = function(test){
     var body = "";
-    tester.get('/folders', function(got){
-        test.expect(1);
-        test.deepEqual(got, myfolders, "Folders");
+    tester.get('/folders', function(got, code){
+        test.expect(2);
+        test.equal(code, 200, '200 OK');
+        test.deepEqual(got, testdata.myfolders, "/folders");
         test.done();
     });
 };
