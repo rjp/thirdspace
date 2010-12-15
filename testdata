@@ -3,6 +3,8 @@ flushdb
 set auth:rjp moose
 sadd folder:chat 1
 sadd folder:chat 2
+sadd thread:1 1
+sadd thread:1 2
 sadd folder:chat 4
 sadd folder:chat 7
 sadd folder:chat 8
