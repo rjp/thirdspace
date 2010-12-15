@@ -14,8 +14,15 @@ function request(method, path, callback){
             body = body + chunk;
         });
         response.on('end', function(){
-            var got = JSON.parse(body);
-            callback(got, response.statusCode);
+            var got;
+            var code = response.statusCode;
+            try {
+                got = JSON.parse(body);
+            } catch(e) {
+                got = {};
+                code = '999';
+            }
+            callback(got, code);
         });
     });
 }
