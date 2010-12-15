@@ -1,15 +1,16 @@
 var assert = require('assert');
 var http = require('http');
+var ua3 = require('../server');
 var tester = require('../httpclient');
 var sys = require('sys');
 var testdata = require('../testdata.js');
 
-exports['folders'] = function(test){
+exports['message-1'] = function(test){
     var body = "";
-    tester.get('/folders', function(got, code){
-        test.expect(2);
+    tester.get('/message/1', function(got, code){
+        test.expect(1);
         test.equal(code, 200, '200 OK');
-        test.deepEqual(got, testdata.l_myfolders, "/folders");
         test.done();
     });
 };
+

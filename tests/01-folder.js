@@ -9,7 +9,7 @@ exports['folder-chat'] = function(test){
     var body = "";
     tester.get('/folder/chat', function(got){
         test.expect(1);
-        test.deepEqual(got, testdata.myfolders.chat, "Folder CHAT");
+        test.deepEqual(got, testdata.h_myfolders.chat, "Folder CHAT");
         test.done();
     });
 };
@@ -18,7 +18,7 @@ exports['folder-mine'] = function(test){
     var body = "";
     tester.get('/folder/mine', function(got){
         test.expect(1);
-        test.deepEqual(got, testdata.myfolders.mine, "Folder MINE");
+        test.deepEqual(got, testdata.h_myfolders.mine, "Folder MINE");
         test.done();
     });
 };
@@ -27,7 +27,7 @@ exports['folder-test'] = function(test){
     var body = "";
     tester.get('/folder/test', function(got){
         test.expect(1);
-        test.deepEqual(got, testdata.myfolders.test, "Folder TEST");
+        test.deepEqual(got, testdata.h_myfolders.test, "Folder TEST");
         test.done();
     });
 };
