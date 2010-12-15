@@ -1,4 +1,5 @@
-if ! git submodule --quiet status; then
+missing=$(git submodule status | grep -c '^-')
+if [ $missing -gt 0 ]; then
     echo git submodules need sorting
     git submodule init
     git submodule update
