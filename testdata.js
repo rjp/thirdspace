@@ -1,12 +1,13 @@
 var sys = require('sys');
 
 exports.allfolders = JSON.parse('[{"folder":"chat","unread":3,"count":5,"sub":1},{"folder":"mine","unread":1,"count":2, "sub":1},{"folder":"test","unread":3,"count":3,"sub":0}]');
-
-// subscribed to everything but test
+exports.h_allfolders = [];
 exports.l_myfolders = [];
 exports.h_myfolders = {};
 for(var i in exports.allfolders) {
     var f = exports.allfolders[i];
+    exports.h_allfolders[f.folder] = f;
+    // subscribed to everything but test
     if (f.folder !== 'test') {
         exports.l_myfolders.push(f);
         exports.h_myfolders[f.folder] = f;

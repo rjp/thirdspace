@@ -27,7 +27,7 @@ exports['folder-test'] = function(test){
     var body = "";
     tester.get('/folder/test', function(got){
         test.expect(1);
-        test.deepEqual(got, testdata.h_myfolders.test, "Folder TEST");
+        test.deepEqual(got, testdata.h_allfolders.test, "Folder TEST");
         test.done();
     });
 };
