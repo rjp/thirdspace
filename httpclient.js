@@ -2,7 +2,7 @@ var http = require('http');
 var sys = require('sys');
 var my_client = http.createClient(3000, 'localhost');
 
-function request(method, path, callback){
+function request(method, path, callback, data){
     var auth = 'Basic ' + new Buffer('rjp:moose').toString('base64');
     var header = {'Host': 'localhost', 'Authorization': auth};
     var request = my_client.request(method, path, header);
@@ -31,6 +31,6 @@ exports.get = function(path, callback) {
     request('GET', path, callback);
 }
 
-exports.post = function(path, callback) {
-    request('POST', path, callback);
+exports.post = function(path, data, callback) {
+    request('POST', path, callback, data);
 }
