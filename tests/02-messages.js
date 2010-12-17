@@ -6,10 +6,10 @@ var sys = require('sys');
 var testdata = require('../testdata.js');
 
 exports['message-1'] = function(test){
-    var body = "";
     tester.get('/message/1', function(got, code){
-        test.expect(1);
+        test.expect(2);
         test.equal(code, 200, '200 OK');
+        test.deepEqual(got, testdata.messages.m_one, 'Matched M1');
         test.done();
     });
 };
