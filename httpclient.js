@@ -7,6 +7,7 @@ UA3 = restler.service(function(u, p){
     this.defaults.username = u;
     this.defaults.password = p;
     this.defaults.parser = restler.parsers.auto;
+    this.defaults.ignoreErrors = true;
 }, {
     baseURL: 'http://localhost:3000'
 }, {
