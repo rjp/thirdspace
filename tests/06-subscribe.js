@@ -7,7 +7,7 @@ var testdata = require('../testdata.js');
 
 exports['subscribe-private'] = function(test){
     var body = "";
-    tester.post('/folder/private/subscribe', function(got, code){
+    tester.post('/folder/private/subscribe', {}, function(got, code){
         test.expect(1);
         test.equal(code, 500, '500 error');
         test.done();
@@ -16,7 +16,7 @@ exports['subscribe-private'] = function(test){
 
 exports['subscribe-test'] = function(test){
     var body = "";
-    tester.post('/folder/test/subscribe', function(got, code){
+    tester.post('/folder/test/subscribe', {}, function(got, code){
         test.expect(3);
         test.equal(code, 200, '200 OK');
         test.deepEqual(got, {"folder":"test"}, "Folder TEST");
@@ -29,7 +29,7 @@ exports['subscribe-test'] = function(test){
 
 exports['subscribe-no-folder'] = function(test){
     var body = "";
-    tester.post('/folder/kalamazoo/subscribe', function(got, code){
+    tester.post('/folder/kalamazoo/subscribe', {}, function(got, code){
         test.expect(2);
         test.equal(code, 404, '404 Unknown Folder');
         tester.get('/folder/kalamazoo', function(got, code){
