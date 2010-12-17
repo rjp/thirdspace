@@ -91,6 +91,14 @@ function k_folder(foldername) {
     return 'folder:'+canon_folder(foldername);
 }
 
+function k_message(id) {
+    return 'message:'+parseInt(id, 10);
+}
+
+function k_body(id) {
+    return 'body:'+parseInt(id, 10);
+}
+
 function error(req, res, message, code) {
     var ejson = { error: message };
     if (code === undefined) { code = 500; }
@@ -159,6 +167,25 @@ function json_folder(req, res, auth) {
     });
 }
 
+function json_message(req, res, auth) {
+    var id = req.params.id;
+    var k_mid = k_message(id);
+    var k_bid = k_body(id);
+
+    redis.hgetall(k_mid, function(e, v){
+        if (e) error(req, res, "Exception:"+e, 500);
+        redis.get(k_bid, function(e, b) {
+            if (e) error(req, res, "Exception:"+e, 500);
+            if (v.id === undefined || v.id !== id) {
+                error(req, res, "No such message:"+id, 404);
+            }
+            v.body = b;
+            res.writeHead(200, {'Content-Type':'application/json'});
+            res.end(JSON.stringify(v));
+        });
+    });
+}
+
 // finally, our actual routing tables
 
 function folder_private(app) {
@@ -196,10 +223,17 @@ function folders(app) {
     });
 }
 
+function message(app) {
+    app.get('/:id', function(req, res, next) {
+        json_message(req, res, req.remoteUser);
+    });
+}
+
 exports.startup = function() {
 	server.use('/folders', connect.router(folders));
 	server.use('/folder/private', connect.router(folder_private));
 	server.use('/folder', connect.router(folder));
+    server.use('/message', connect.router(message));
 	
     redis.select(config.redisdb,function(){});
 	server.listen(config.port);
