@@ -31,9 +31,9 @@ exports['subscribe-no-folder'] = function(test){
     var body = "";
     tester.post('/folder/kalamazoo/subscribe', function(got, code){
         test.expect(2);
-        test.equal(code, 404, '404 OK');
+        test.equal(code, 404, '404 Unknown Folder');
         tester.get('/folder/kalamazoo', function(got, code){
-            test.equal(code, 404, 'subscribe-vivify?'); 
+            test.equal(code, 404, 'subscribe-auto-vivify?');
             test.done();
         });
     });
