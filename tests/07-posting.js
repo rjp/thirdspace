@@ -28,3 +28,25 @@ exports['posting-2'] = function(test) {
     });
 }
 
+exports['posting-3'] = function(test){
+    tester.post('/folder/test', {subject:"Testing post 2", body:"New Post"}, function(got, code){
+        test.expect(4);
+        test.equal(code, 200, '200 OK');
+        test.equal(12, got.id, 'New message ID = 12');
+        test.equal(12, got.thread, 'New thread ID = 12');
+        // message epoch should be recent
+        var now = parseInt(new Date().getTime() / 1000, 10);
+        test.ok(now - got.epoch < 30, 'recent is ok');
+        test.done();
+    });
+};
+
+exports['posting-4'] = function(test) {
+    tester.get('/message/12', function(got, code){
+        test.expect(3);
+        test.equal(200, code, 'Message 12 exists');
+        test.equal('Testing post 2', got.subject, 'Message 12 subject');
+        test.equal('New Post', got.body, 'Message 12 body');
+        test.done();
+    });
+}
