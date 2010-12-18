@@ -17,8 +17,8 @@ UA3 = restler.service(function(u, p){
             callback(data, resp.statusCode);
         });
     },
-    raw_post: function(path, data, callback) {
-        this.post(path, data).addListener('complete', function(data, resp){
+    raw_post: function(path, cgi, callback) {
+        this.post(path, {data:cgi}).addListener('complete', function(data, resp){
             callback(data, resp.statusCode);
         });
     }
