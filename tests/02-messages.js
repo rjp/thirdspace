@@ -14,3 +14,12 @@ exports['message-1'] = function(test){
     });
 };
 
+exports['message-2'] = function(test){
+    tester.get('/message/2', function(got, code){
+        test.expect(2);
+        test.equal(code, 200, '200 OK');
+        test.deepEqual(got, testdata.messages.m_two, 'Matched M2');
+        test.done();
+    });
+};
+
