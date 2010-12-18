@@ -8,10 +8,10 @@ exports.map = function(list, each_callback, final_callback) {
         final_callback(undefined, []);
         return;
     }
-    var ilist = new Array;
+    var ilist = [];
     var lsize = list.length;
     var mid_callback = function(err, val){
-        if (err) final_callback(err, undefined);
+        if (err) { final_callback(err, undefined); }
         ilist.push(val);
         sys.puts('pushed '+ilist.length+' / '+lsize);
         if (ilist.length == lsize) {
@@ -19,7 +19,8 @@ exports.map = function(list, each_callback, final_callback) {
 	    }
     };
     for(var i in list) {
-        each_callback(list[i], i, mid_callback);
+        if (list.hasOwnProperty(i)) {
+            each_callback(list[i], i, mid_callback);
+        }
     }
-}
-
+};
