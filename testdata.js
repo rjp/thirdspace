@@ -37,3 +37,13 @@ var test_messages = {
     }
 };
 exports.messages = test_messages;
+
+// we leave out epoch and ignore it in the tests
+var test_replies = {
+    "r_one": {
+        "folder":"chat", "id":11, "to":"rjp",
+        "from":"rjp", "subject":"UA3", "threadId":1,
+        "body":"Testings"
+    }
+};
+exports.replies = test_replies;
