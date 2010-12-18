@@ -2,6 +2,7 @@ select 2
 flushdb
 set auth:rjp moose
 set c_message 10
+set c_thread 10
 sadd folder:chat 1
 sadd folder:chat 2
 sadd thread:1 1
