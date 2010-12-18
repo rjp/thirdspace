@@ -184,6 +184,52 @@ function json_folder(req, res, auth) {
     });
 }
 
+function reply_message(req, res, auth) {
+    var id = req.params.id;
+    var k_mid = k_message(id);
+    if (req.body.body === undefined) {
+        error(req, res, 'Must supply a body for a reply', 500);
+        return undefined;
+    }
+
+    var body = req.body.body;
+    var epoch = parseInt(new Date().getTime() / 1000, 10);
+
+    redis.hgetall(k_mid, function(e, v){
+        if (e) { error(req, res, "Exception:"+e, 500); }
+        sys.puts(sys.inspect(v));
+        var h_message = { from:auth };
+        h_message.subject = req.body.subject || v.subject;
+        h_message.folder = req.body.folder || v.folder;
+        h_message.thread = v.thread; // same thread ID
+
+        // avoid an undefined To: being stored in the hash
+        if (v.to) { h_message.to = v.to; }
+        if (req.body.to) { h_message.to = req.body.to; }
+
+	    redis.incr('c_message', function(e, message_id) {
+	        if(e) { error(req, res, "could not get message id", 500); }
+	        log.info("new message id is "+message_id);
+	        h_message.id = message_id;
+            redis.hmset('message:'+message_id, h_message, function(e,v){
+                if(e) { error(req, res, "could not store message", 500); }
+                log.info("new message stored "+message_id);
+
+                redis.set('body:'+message_id, body, function(e, v){
+                    if(e) { error(req, res, "could not store body", 500); }
+                    var retval = {
+                        id: message_id, thread: h_message.thread,
+                        folder: h_message.folder, epoch: epoch
+                    };
+                    log.info("new body stored "+message_id);
+                    res.writeHead(200, {'Content-Type':'application/json'});
+                    res.end(JSON.stringify(retval));
+                });
+            });
+        });
+    });
+}
+
 function json_message(req, res, auth) {
     var id = req.params.id;
     var k_mid = k_message(id);
@@ -257,6 +303,7 @@ function folder_private(app) {
         post_private(req, res, req.remoteUser);
     });
 }
+
 function folder(app) {
     // GET
     app.get('/:name', function(req, res, next){
@@ -290,8 +337,13 @@ function folders(app) {
 }
 
 function message(app) {
+    // GET
     app.get('/:id', function(req, res, next) {
         json_message(req, res, req.remoteUser);
+    });
+    // POST
+    app.post('/:id', function(req, res, next) {
+        reply_message(req, res, req.remoteUser);
     });
 }
 
