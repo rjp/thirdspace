@@ -7,14 +7,13 @@ var testdata = require('../testdata.js');
 
 exports['posting-1'] = function(test){
     tester.post('/folder/test', {subject:"Testing post", body:"New Post"}, function(got, code){
-        test.expect(3);
+        test.expect(4);
         test.equal(code, 200, '200 OK');
-        var reply_epoch = got.epoch; delete got.epoch;
         test.equal(11, got.id, 'New message ID = 11');
         test.equal(11, got.thread, 'New thread ID = 11');
+        // message epoch should be recent
         var now = parseInt(new Date().getTime() / 1000, 10);
-        // test that now - reply_epoch < 30ish
-        // test.within(30, now - reply_epoch, 'recent is ok');
+        test.ok(now - got.epoch < 30, 'recent is ok');
         test.done();
     });
 };
