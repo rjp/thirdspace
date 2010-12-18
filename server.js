@@ -10,21 +10,14 @@ try {
     var config_json = fs.readFileSync(process.argv[2], 'utf8');
     config = JSON.parse(config_json);
 } catch(e) {
-    config = {"port":3000,"redisport":6379, "redisdb":2}
+    config = {"port":3000,"redisport":6379, "redisdb":2};
 }
 
 if (process.env.redisport !== undefined) {
-    config.redisport = parseInt(process.env.redisport);
+    config.redisport = parseInt(process.env.redisport, 10);
 }
 
 var redis = redisFactory.createClient(config.redisport);
-
-// create a bogstandard authenticating connect server
-var server = connect.createServer(
-    connect.logger({buffer:true})
-);
-
-server.use(connect.basicAuth(authenticate, 'ua3'));
 
 // this should probably be smarter
 function authenticate(user, pass, success, failure) {
@@ -61,17 +54,19 @@ function map(list, each_callback, final_callback) {
         final_callback(undefined, []);
         return;
     }
-    var ilist = new Array;
+    var ilist = [];
     var lsize = list.length;
     var mid_callback = function(err, val){
-        if (err) final_callback(err, undefined);
+        if (err) { final_callback(err, undefined); }
         ilist.push(val);
         if (ilist.length == lsize) {
             final_callback(undefined, ilist);
 	    }
     };
     for(var i in list) {
-        each_callback(list[i], i, mid_callback);
+        if (list.hasOwnProperty(i)) {
+            each_callback(list[i], i, mid_callback);
+        }
     }
 }
 
@@ -111,13 +106,13 @@ function get_folder_unread(folder, user, callback) {
     var c;
     redis.sismember(k_user(user, 'subs'), canon_folder(folder), function(e, s){
         redis.scard(k_folder(folder), function(e, c){
-            if (e) throw(e);
+            if (e) { throw(e); }
             redis.sdiff(k_folder(folder), k_user(user, 'read'), function(e,v){
-                if (e) throw(e);
+                if (e) { throw(e); }
                 callback(undefined, 
                     {folder:folder, unread:v.length, count: c, sub: s});
-            })
-        })
+            });
+        });
     });
 }
 
@@ -147,7 +142,7 @@ function subscribe_folder(req, res, auth) {
         }
         var k_subs = k_user(auth, 'subs');
         redis.sadd(k_subs, canon_folder(folder), function(e, v){
-            if (e) error(req, res, "Failed to subscribe:"+folder, 500);
+            if (e) { error(req, res, "Failed to subscribe:"+folder, 500); }
             res.writeHead(200, {'Content-Type':'application/json'});
             res.end(JSON.stringify({"folder":folder}));
         });
@@ -165,7 +160,7 @@ function unsubscribe_folder(req, res, auth) {
         }
         var k_subs = k_user(auth, 'subs');
         redis.srem(k_subs, canon_folder(folder), function(e, v){
-            if (e) error(req, res, "Failed to unsubscribe:"+folder, 500);
+            if (e) { error(req, res, "Failed to unsubscribe:"+folder, 500); }
             res.writeHead(200, {'Content-Type':'application/json'});
             res.end(JSON.stringify({"folder":folder}));
         });
@@ -195,9 +190,9 @@ function json_message(req, res, auth) {
     var k_bid = k_body(id);
 
     redis.hgetall(k_mid, function(e, v){
-        if (e) error(req, res, "Exception:"+e, 500);
+        if (e) { error(req, res, "Exception:"+e, 500); }
         redis.get(k_bid, function(e, b) {
-            if (e) error(req, res, "Exception:"+e, 500);
+            if (e) { error(req, res, "Exception:"+e, 500); }
             if (v.id === undefined || v.id !== id) {
                 error(req, res, "No such message:"+id, 404);
             }
@@ -257,6 +252,10 @@ function message(app) {
     });
 }
 
+// create a bogstandard authenticating connect server
+var server = connect.createServer( connect.logger({buffer:true}) );
+server.use(connect.basicAuth(authenticate, 'ua3'));
+
 exports.startup = function() {
 	server.use('/folders', connect.router(folders));
 	server.use('/folder/private', connect.router(folder_private));
@@ -266,4 +265,5 @@ exports.startup = function() {
     redis.select(config.redisdb,function(){});
 	server.listen(config.port);
 	log.info('Connect server listening on port '+config.port);
-}
+};
+
