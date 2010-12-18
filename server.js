@@ -203,6 +203,47 @@ function json_message(req, res, auth) {
     });
 }
 
+function post_folder(req, res, auth) {
+    var folder = canon_folder(req.params.name);
+    var body = req.body.body;
+    var subject = req.body.subject;
+    var to = req.body.to;
+    var epoch = parseInt(new Date().getTime() / 1000, 10);
+
+    var h_message = {
+        from: canon_user(auth), subject: subject,
+        epoch: epoch, folder: folder
+    };
+    if (to !== undefined) {
+        h_message.to = canon_user(to);
+    }
+    // this should all be in a transaction, I guess
+    redis.incr('c_message', function(e, message_id) {
+        if(e) { error(req, res, "could not get message id", 500); }
+        log.info("new message id is "+message_id);
+        h_message.id = message_id;
+        redis.incr('c_thread', function(e, thread_id) {
+            if(e) { error(req, res, "could not get thread id", 500); }
+            log.info("new thread id is "+message_id);
+            h_message.thread = thread_id;
+            redis.hmset('message:'+message_id, h_message, function(e,v){
+                if(e) { error(req, res, "could not store message", 500); }
+                log.info("new message stored "+message_id);
+                redis.set('body:'+message_id, body, function(e, v){
+                    var retval = {
+                        id: message_id, thread: thread_id,
+                        folder: folder, epoch: epoch
+                    };
+                    if(e) { error(req, res, "could not store body", 500); }
+                    log.info("new body stored "+message_id);
+                    res.writeHead(200, {'Content-Type':'application/json'});
+                    res.end(JSON.stringify(retval));
+                });
+            });
+        });
+    });
+}
+
 // finally, our actual routing tables
 
 function folder_private(app) {
@@ -217,12 +258,14 @@ function folder_private(app) {
     });
 }
 function folder(app) {
+    // GET
     app.get('/:name', function(req, res, next){
         json_folder(req, res, req.remoteUser);
     });
     app.get('/:name/:extra', function(req, res, next){
         json_folder(req, res, req.remoteUser);
     });
+    // POST
     app.post('/private/subscribe', function(req, res, next) {
         error(req, res, "cannot resubscribe to private", 500);
     });
@@ -253,7 +296,7 @@ function message(app) {
 }
 
 // create a bogstandard authenticating connect server
-var server = connect.createServer( connect.logger({buffer:true}) );
+var server = connect.createServer( connect.logger({buffer:true}), connect.bodyDecoder() );
 server.use(connect.basicAuth(authenticate, 'ua3'));
 
 exports.startup = function() {
