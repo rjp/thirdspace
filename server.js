@@ -145,8 +145,30 @@ function subscribe_folder(req, res, auth) {
             error(req, res, "No such folder:"+folder, 404);
             return;
         }
-        res.writeHead(200, {'Content-Type':'application/json'});
-        res.end(JSON.stringify({"folder":folder}));
+        var k_subs = k_user(auth, 'subs');
+        redis.sadd(k_subs, canon_folder(folder), function(e, v){
+            if (e) error(req, res, "Failed to subscribe:"+folder, 500);
+            res.writeHead(200, {'Content-Type':'application/json'});
+            res.end(JSON.stringify({"folder":folder}));
+        });
+    });
+}
+
+// there's a lot of "check if this folder exists" duplication
+// TODO refactor it out into some kind of guard assertion clause thing
+function unsubscribe_folder(req, res, auth) {
+    var folder = req.params.name;
+    redis.exists(k_folder(folder), function(e, v){
+        if(!v) {
+            error(req, res, "No such folder:"+folder, 404);
+            return;
+        }
+        var k_subs = k_user(auth, 'subs');
+        redis.srem(k_subs, canon_folder(folder), function(e, v){
+            if (e) error(req, res, "Failed to unsubscribe:"+folder, 500);
+            res.writeHead(200, {'Content-Type':'application/json'});
+            res.end(JSON.stringify({"folder":folder}));
+        });
     });
 }
 
@@ -207,10 +229,16 @@ function folder(app) {
         json_folder(req, res, req.remoteUser);
     });
     app.post('/private/subscribe', function(req, res, next) {
-        error(req, res, "Cannot resubscribe to private", 500);
+        error(req, res, "cannot resubscribe to private", 500);
     });
     app.post('/:name/subscribe', function(req, res, next){
         subscribe_folder(req, res, req.remoteUser);
+    });
+    app.post('/private/unsubscribe', function(req, res, next) {
+        error(req, res, "cannot unsubscribe from private", 500);
+    });
+    app.post('/:name/unsubscribe', function(req, res, next){
+        unsubscribe_folder(req, res, req.remoteUser);
     });
     app.post('/:name', function(req, res, next){
         post_folder(req, res, req.remoteUser);

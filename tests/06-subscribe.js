@@ -15,17 +15,32 @@ exports['subscribe-private'] = function(test){
 };
 
 exports['subscribe-test'] = function(test){
-    var body = "";
     tester.post('/folder/test/subscribe', {}, function(got, code){
         test.expect(3);
         test.equal(code, 200, '200 OK');
         test.deepEqual(got, {"folder":"test"}, "Folder TEST");
+        // TODO this should test that we're subscribed to all our original
+        // folders + test but that's tricky given we get a list back from
+        // /folders and deepEqual can't compare differently sorted lists
         tester.get('/folder/test', function(got, code){
             test.equal(got.sub, 1, 'subscribed ok?');
             test.done();
         });
     });
 };
+
+exports['unsubscribe-test'] = function(test){
+    tester.post('/folder/test/unsubscribe', {}, function(got, code){
+        test.expect(3);
+        test.equal(code, 200, '200 OK');
+        test.deepEqual(got, {"folder":"test"}, "Folder TEST");
+        tester.get('/folder/test', function(got, code){
+            test.equal(got.sub, 0, 'subscribed ok?');
+            test.done();
+        });
+    });
+};
+
 
 exports['subscribe-no-folder'] = function(test){
     var body = "";
