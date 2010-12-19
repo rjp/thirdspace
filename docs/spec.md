@@ -46,7 +46,7 @@ Identical to /folders but restricted to subscribed folders.
 
 Identical to /folders but restricted to subscribed folders with unread messages.
 
-You can remove the implied filter by using GET folders/all/unread.
+You can remove the implied filter by using GET /folders/all/unread.
 
 ## POST /folder/XYZ/subscribe
 
@@ -184,3 +184,21 @@ Mark all messages thread(s) as unread. Same format as /read.
 ## GET /system
 
 Details about the system. It will not include a banner.
+
+You recieve:
+
+{ epoc:1289914330 }
+
+Epoc is the current server time.
+
+## GET /users/online
+
+You receive a list:
+
+        [
+          { "user":"Techno", "epoch":1289914330, "hostname":"one.two.com", "location":"The Two Place" },
+          { "user":"rjp", "epoch":1289914330, "hostname":"four.two.com", "location":"The Two Place" },
+          ...
+        ]
+
+epoc is the time at which the most recent request was made.
