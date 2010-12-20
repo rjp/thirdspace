@@ -6,11 +6,11 @@ var sys = require('sys');
 var testdata = require('../testdata.js');
 
 exports['posting-1'] = function(test){
-    tester.post('/folder/test', {subject:"Testing post", body:"New Post"}, function(got, code){
+    tester.rjp.post('/folder/test', {subject:"Testing post", body:"New Post"}, function(got, code){
         test.expect(4);
         test.equal(code, 200, '200 OK');
         test.equal(11, got.id, 'New message ID = 11');
-        test.equal(11, got.thread, 'New thread ID = 11');
+        test.equal(8, got.thread, 'New thread ID = 11');
         // message epoch should be recent
         var now = parseInt(new Date().getTime() / 1000, 10);
         test.ok(now - got.epoch < 30, 'recent is ok');
@@ -19,7 +19,7 @@ exports['posting-1'] = function(test){
 };
 
 exports['posting-2'] = function(test) {
-    tester.get('/message/11', function(got, code){
+    tester.rjp.get('/message/11', function(got, code){
         test.expect(3);
         test.equal(200, code, 'Message 11 exists');
         test.equal('Testing post', got.subject, 'Message 11 subject');
@@ -29,11 +29,11 @@ exports['posting-2'] = function(test) {
 }
 
 exports['posting-3'] = function(test){
-    tester.post('/folder/test', {subject:"Testing post 2", body:"New Post"}, function(got, code){
+    tester.rjp.post('/folder/test', {subject:"Testing post 2", body:"New Post"}, function(got, code){
         test.expect(4);
         test.equal(code, 200, '200 OK');
         test.equal(12, got.id, 'New message ID = 12');
-        test.equal(12, got.thread, 'New thread ID = 12');
+        test.equal(9, got.thread, 'New thread ID = 12');
         // message epoch should be recent
         var now = parseInt(new Date().getTime() / 1000, 10);
         test.ok(now - got.epoch < 30, 'recent is ok');
@@ -42,7 +42,7 @@ exports['posting-3'] = function(test){
 };
 
 exports['posting-4'] = function(test) {
-    tester.get('/message/12', function(got, code){
+    tester.rjp.get('/message/12', function(got, code){
         test.expect(3);
         test.equal(200, code, 'Message 12 exists');
         test.equal('Testing post 2', got.subject, 'Message 12 subject');
