@@ -10,6 +10,7 @@ function Tester(user, pass) {
 	    this.defaults.password = p;
 	    this.defaults.parser = restler.parsers.auto;
 	    this.defaults.ignoreErrors = true;
+        this.defaults.jsondata = true;
 	}, {
 	    baseURL: 'http://localhost:3000'
 	}, {
