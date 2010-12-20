@@ -1,6 +1,8 @@
 select 2
 flushdb
 set auth:rjp moose
+set auth:techno ladroga
+set auth:lurker spanial
 set c_message 10
 set c_thread 10
 sadd folder:chat 1
@@ -20,3 +22,6 @@ sadd user:rjp:subs mine
 sadd user:rjp:read 1
 sadd user:rjp:read 2
 sadd user:rjp:read 9
+sadd user:techno:subs chat
+sadd user:techno:read 1
+sadd user:techno:read 2
