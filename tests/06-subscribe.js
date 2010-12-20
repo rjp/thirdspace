@@ -7,7 +7,7 @@ var testdata = require('../testdata.js');
 
 exports['subscribe-private'] = function(test){
     var body = "";
-    tester.post('/folder/private/subscribe', {}, function(got, code){
+    tester.rjp.post('/folder/private/subscribe', {}, function(got, code){
         test.expect(1);
         test.equal(code, 500, '500 error');
         test.done();
@@ -15,14 +15,14 @@ exports['subscribe-private'] = function(test){
 };
 
 exports['subscribe-test'] = function(test){
-    tester.post('/folder/test/subscribe', {}, function(got, code){
+    tester.rjp.post('/folder/test/subscribe', {}, function(got, code){
         test.expect(3);
         test.equal(code, 200, '200 OK');
         test.deepEqual(got, {"folder":"test"}, "Folder TEST");
         // TODO this should test that we're subscribed to all our original
         // folders + test but that's tricky given we get a list back from
         // /folders and deepEqual can't compare differently sorted lists
-        tester.get('/folder/test', function(got, code){
+        tester.rjp.get('/folder/test', function(got, code){
             test.equal(got.sub, 1, 'subscribed ok?');
             test.done();
         });
@@ -30,11 +30,11 @@ exports['subscribe-test'] = function(test){
 };
 
 exports['unsubscribe-test'] = function(test){
-    tester.post('/folder/test/unsubscribe', {}, function(got, code){
+    tester.rjp.post('/folder/test/unsubscribe', {}, function(got, code){
         test.expect(3);
         test.equal(code, 200, '200 OK');
         test.deepEqual(got, {"folder":"test"}, "Folder TEST");
-        tester.get('/folder/test', function(got, code){
+        tester.rjp.get('/folder/test', function(got, code){
             test.equal(got.sub, 0, 'subscribed ok?');
             test.done();
         });
@@ -44,10 +44,10 @@ exports['unsubscribe-test'] = function(test){
 
 exports['subscribe-no-folder'] = function(test){
     var body = "";
-    tester.post('/folder/kalamazoo/subscribe', {}, function(got, code){
+    tester.rjp.post('/folder/kalamazoo/subscribe', {}, function(got, code){
         test.expect(2);
         test.equal(code, 404, '404 Unknown Folder');
-        tester.get('/folder/kalamazoo', function(got, code){
+        tester.rjp.get('/folder/kalamazoo', function(got, code){
             test.equal(code, 404, 'subscribe-auto-vivify?');
             test.done();
         });
