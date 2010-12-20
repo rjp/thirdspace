@@ -13,7 +13,6 @@ exports.map = function(list, each_callback, final_callback) {
     var mid_callback = function(err, val){
         if (err) { final_callback(err, undefined); }
         ilist.push(val);
-        sys.puts('pushed '+ilist.length+' / '+lsize);
         if (ilist.length == lsize) {
             final_callback(undefined, ilist);
 	    }
