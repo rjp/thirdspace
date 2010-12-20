@@ -7,11 +7,17 @@ exports.h_myfolders = {};
 for(var i in exports.allfolders) {
     var f = exports.allfolders[i];
     exports.h_allfolders[f.folder] = f;
-    // subscribed to everything but test
+    // rjp is subscribed to everything but test
     if (f.folder !== 'test') {
         exports.l_myfolders.push(f);
         exports.h_myfolders[f.folder] = f;
     }
+    // techno is only subscribed to chat
+    if (f.folder === 'chat') {
+        exports.lf.techno.push(f);
+        exports.hf.techno[f.folder] = f;
+    }
+
 }
 
 var test_messages = {
