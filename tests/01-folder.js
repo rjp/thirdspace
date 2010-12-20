@@ -7,7 +7,7 @@ var testdata = require('../testdata.js');
 
 exports['folder-chat'] = function(test){
     var body = "";
-    tester.get('/folder/chat', function(got){
+    tester.rjp.get('/folder/chat', function(got){
         test.expect(1);
         test.deepEqual(got, testdata.h_myfolders.chat, "Folder CHAT");
         test.done();
@@ -16,7 +16,7 @@ exports['folder-chat'] = function(test){
 
 exports['folder-mine'] = function(test){
     var body = "";
-    tester.get('/folder/mine', function(got){
+    tester.rjp.get('/folder/mine', function(got){
         test.expect(1);
         test.deepEqual(got, testdata.h_myfolders.mine, "Folder MINE");
         test.done();
@@ -25,7 +25,7 @@ exports['folder-mine'] = function(test){
 
 exports['folder-test'] = function(test){
     var body = "";
-    tester.get('/folder/test', function(got){
+    tester.rjp.get('/folder/test', function(got){
         test.expect(1);
         test.deepEqual(got, testdata.h_allfolders.test, "Folder TEST");
         test.done();
