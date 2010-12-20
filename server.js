@@ -276,14 +276,17 @@ function post_folder(req, res, auth) {
                 if(e) { error(req, res, "could not store message", 500); }
                 log.info("new message stored "+message_id);
                 redis.set('body:'+message_id, body, function(e, v){
-                    var retval = {
-                        id: message_id, thread: thread_id,
-                        folder: folder, epoch: epoch
-                    };
                     if(e) { error(req, res, "could not store body", 500); }
-                    log.info("new body stored "+message_id);
-                    res.writeHead(200, {'Content-Type':'application/json'});
-                    res.end(JSON.stringify(retval));
+                    redis.sadd(k_folder(folder), message_id, function(e,v){
+                        if(e) { error(req, res, "could not add folder", 500); }
+	                    var retval = {
+	                        id: message_id, thread: thread_id,
+	                        folder: folder, epoch: epoch
+	                    };
+	                    log.info("new body stored "+message_id);
+	                    res.writeHead(200, {'Content-Type':'application/json'});
+	                    res.end(JSON.stringify(retval));
+                    });
                 });
             });
         });
