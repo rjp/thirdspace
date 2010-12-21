@@ -7,4 +7,3 @@ ua3.startup();
 var reporter = require('nodeunit').reporters.default;
 console.log('ua3 started up, waiting 5 seconds before testing');
 setTimeout(function(){ reporter.run(['tests']) }, 5000);
-

@@ -5,29 +5,26 @@ var tester = require('../httpclient');
 var sys = require('sys');
 var testdata = require('../testdata.js');
 
-exports['folder-chat'] = function(test){
-    var body = "";
-    tester.get('/folder/chat', function(got){
-        test.expect(1);
-        test.deepEqual(got, testdata.h_myfolders.chat, "Folder CHAT");
-        test.done();
-    });
-};
+function make_test(folder, who, wanted) {
+    return function(test) {
+	    tester[who].get('/folder/'+folder, function(got){
+	        test.expect(1);
+	        test.deepEqual(got, wanted, "Folder "+folder+", "+who);
+	        test.done();
+	    });
+    }
+}
 
-exports['folder-mine'] = function(test){
-    var body = "";
-    tester.get('/folder/mine', function(got){
-        test.expect(1);
-        test.deepEqual(got, testdata.h_myfolders.mine, "Folder MINE");
-        test.done();
-    });
-};
+var fred = testdata.json.folders.t01;
+var users = ['rjp', 'techno', 'lurker'];
+var folders = ['chat', 'mine', 'test'];
 
-exports['folder-test'] = function(test){
-    var body = "";
-    tester.get('/folder/test', function(got){
-        test.expect(1);
-        test.deepEqual(got, testdata.h_allfolders.test, "Folder TEST");
-        test.done();
-    });
-};
+for(var i in folders) {
+    for (var j in users) {
+        var f = folders[i];
+        var u = users[j];
+        sys.puts("making test for "+f+", "+u);
+        exports['folder-'+f+'-'+u] = make_test(f, u, fred[u][f]);
+    }
+}
+

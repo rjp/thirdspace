@@ -1,4 +1,5 @@
 var sys = require('sys');
+var fs = require('fs');
 
 exports.allfolders = JSON.parse('[{"folder":"chat","unread":3,"count":5,"sub":1},{"folder":"mine","unread":1,"count":2, "sub":1},{"folder":"test","unread":3,"count":3,"sub":0}]');
 exports.h_allfolders = [];
@@ -7,7 +8,7 @@ exports.h_myfolders = {};
 for(var i in exports.allfolders) {
     var f = exports.allfolders[i];
     exports.h_allfolders[f.folder] = f;
-    // subscribed to everything but test
+    // rjp is subscribed to everything but test
     if (f.folder !== 'test') {
         exports.l_myfolders.push(f);
         exports.h_myfolders[f.folder] = f;
@@ -21,7 +22,7 @@ var test_messages = {
         "body":"UA3 is alive! Let there be rejoicing!"
     },
     "m_two": {
-        "folder":"chat", "id":2, "epoch":1289914769,
+        "folder":"chat", "id":2, "epoch":1289914769, "inReplyTo":1,
         "from":"techno", "to":"rjp", "subject":"UA3",
         "body":"Bring on the dancing horses!", "thread":1,
     },
@@ -47,3 +48,7 @@ var test_replies = {
     }
 };
 exports.replies = test_replies;
+
+// move this into testdata.js shortly
+var extra_json = fs.readFileSync('testdata.json', 'utf8');
+exports.json = JSON.parse(extra_json);
