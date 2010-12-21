@@ -1,0 +1,87 @@
+{
+    "auth":{"rjp":"moose","techno":"ladroga","lurker":"spaniel"},
+    "preload":{
+		    "m_one": {
+		        "folder":"chat", "id":1, "epoch":1289914759,
+		        "from":"rjp", "subject":"UA3", "thread":1,
+		        "body":"UA3 is alive! Let there be rejoicing!"
+		    },
+		    "m_two": {
+		        "folder":"chat", "id":2, "epoch":1289914769, "inReplyTo":1,
+		        "from":"techno", "to":"rjp", "subject":"UA3",
+		        "body":"Bring on the dancing horses!", "thread":1
+		    },
+		    "m_three": {
+		        "folder":"test", "id":3, "epoch":1289914759,
+		        "from":"otama", "subject":"The taste of Dolphins",
+		        "body":"Apparently they taste like fish.", "thread":2
+		    },
+		    "m_four": {
+		        "folder":"chat", "id":4, "epoch":1289914759,
+		        "from":"parm", "subject":"FIRST!",
+		        "body":"", "thread":3
+		    },
+	        "m_five": {
+		        "folder":"test", "id":5, "epoch":1289914859,
+		        "from":"gryn", "subject":"FIRST!",
+		        "body":"", "thread":4
+		    },
+	        "m_six": {
+		        "folder":"test", "id":6, "epoch":1289914859,
+		        "from":"rincewind", "subject":"Look at this awesome site!",
+		        "body":"http://flickr.com/", "thread":5
+		    },
+	        "m_seven": {
+		        "folder":"chat", "id":7, "epoch":1289914959,
+		        "from":"otama", "subject":"FIRST!", "to":"parm",
+		        "body":"Fool!", "thread":3, "inReplyTo":4
+		    },
+	        "m_eight": {
+		        "folder":"chat", "id":8, "epoch":1289914969,
+		        "from":"billynomates", "subject":"Flanges",
+		        "body":"I like flanges.\n\nI love to rub them.", "thread":6
+		    },
+	        "m_nine": {
+		        "folder":"mine", "id":9, "epoch":1289914969,
+		        "from":"rjp", "subject":"craft",
+		        "body":"How terribly witty.", "thread":7 
+		    },
+	        "m_ten": {
+		        "folder":"mine", "id":10, "epoch":1289914999,
+		        "from":"techno", "subject":"UA3", "to":"techno",
+		        "body":"I like to rub horses.", "thread":1 
+		    }
+    },
+    "messages":{
+        "m_eleven": {
+            "post":{
+                "folder":"test","subject":"Testing post","body":"New Post"
+            },
+            "expect":{ "folder":"test", "id":11, "thread":11 }
+        }
+    },
+    "replies":{
+	    "r_one": {
+            "post":{"body":"Testings"},
+            "expect":{ "folder":"chat", "id":11, "thread":1 }
+	    }
+    },
+    "subs":{"rjp":["chat","mine"],"techno":["chat"]},
+    "read":{"rjp":[1,2,9],"techno":[1,2]},
+    "unread": {
+        "rjp": { "chat": 4, "mine": 1 },
+        "techno": { "chat": 4 }
+    },
+    "folders": {
+        "t00": {
+            "rjp": [
+                {"folder":"chat","unread":3,"count":5,"sub":1},
+                {"folder":"mine","unread":1,"count":2,"sub":1}
+            ],
+            "techno": [ 
+                {"folder":"chat","unread":3,"count":5,"sub":1}
+            ]
+        }
+    },
+    "end":1
+}
