@@ -4,22 +4,19 @@ var tester = require('../httpclient');
 var sys = require('sys');
 var testdata = require('../testdata.js');
 
-exports['folders-1'] = function(test){
-    var body = "";
-    tester.rjp.get('/folders', function(got, code){
-        test.expect(2);
-        test.equal(code, 200, '200 OK');
-        test.deepEqual(got, testdata.json.folders.t00.rjp, "/folders");
-        test.done();
-    });
-};
+function make_test(who) {
+    return function(test) {
+	    tester[who].get('/folders', function(got){
+	        test.expect(1);
+	        test.deepEqual(got, testdata.json.folders.t00[who], "Folders "+who);
+	        test.done();
+	    });
+    }
+}
 
-exports['folders-2'] = function(test){
-    var body = "";
-    tester.techno.get('/folders', function(got, code){
-        test.expect(2);
-        test.equal(code, 200, '200 OK');
-        test.deepEqual(got, testdata.json.folders.t00.techno, "/folders");
-        test.done();
-    });
-};
+var fred = testdata.json.folders.t01;
+var users = ['rjp', 'techno', 'lurker'];
+
+for (var j in users) {
+    exports['folders-'+users[j]] = make_test(users[j]);
+}
