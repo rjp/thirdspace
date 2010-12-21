@@ -9,7 +9,7 @@ exports['folders-1'] = function(test){
     tester.rjp.get('/folders', function(got, code){
         test.expect(2);
         test.equal(code, 200, '200 OK');
-        test.deepEqual(got, testdata.l_myfolders, "/folders");
+        test.deepEqual(got, testdata.json.folders.t00.rjp, "/folders");
         test.done();
     });
 };
@@ -19,7 +19,7 @@ exports['folders-2'] = function(test){
     tester.techno.get('/folders', function(got, code){
         test.expect(2);
         test.equal(code, 200, '200 OK');
-        test.deepEqual(got, testdata.l_myfolders, "/folders");
+        test.deepEqual(got, testdata.json.folders.t00.techno, "/folders");
         test.done();
     });
 };
