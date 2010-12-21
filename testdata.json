@@ -68,10 +68,6 @@
     },
     "subs":{"rjp":["chat","mine"],"techno":["chat"]},
     "read":{"rjp":[1,2,9],"techno":[1,2]},
-    "unread": {
-        "rjp": { "chat": 4, "mine": 1 },
-        "techno": { "chat": 4 }
-    },
     "folders": {
         "t00": {
             "rjp": [
@@ -80,7 +76,25 @@
             ],
             "techno": [ 
                 {"folder":"chat","unread":3,"count":5,"sub":1}
-            ]
+            ],
+            "lurker": []
+        },
+        "t01": {
+            "rjp": {
+                "chat": {"folder":"chat","unread":3,"count":5,"sub":1},
+                "mine": {"folder":"mine","unread":1,"count":2,"sub":1},
+                "test": {"folder":"test","unread":3,"count":3,"sub":0}
+            },
+            "techno": {
+                "chat": {"folder":"chat","unread":3,"count":5,"sub":1},
+                "mine": {"folder":"mine","unread":2,"count":2,"sub":0},
+                "test": {"folder":"test","unread":3,"count":3,"sub":0}
+            },
+            "lurker": {
+                "chat": {"folder":"chat","unread":5,"count":5,"sub":0},
+                "mine": {"folder":"mine","unread":2,"count":2,"sub":0},
+                "test": {"folder":"test","unread":3,"count":3,"sub":0}
+            }
         }
     },
     "end":1
