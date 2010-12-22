@@ -1,4 +1,4 @@
-Current progress: 1a
+## Current progress: 1c
 
 JSON is always over HTTP, EDF is always over socket.
 
