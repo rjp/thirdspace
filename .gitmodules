@@ -10,3 +10,9 @@
 [submodule "restler"]
 	path = restler
 	url = git://github.com/rjp/restler.git
+[submodule "log.js"]
+	path = log.js
+	url = git://github.com/visionmedia/log.js.git
+[submodule "nodeunit"]
+	path = nodeunit
+	url = git://github.com/caolan/nodeunit.git
