@@ -2,7 +2,7 @@ var sys = require('sys');
 var fs = require('fs');
 var connect = require('./connect/lib/connect/index');
 var redisFactory = require('./redis-node/lib/redis');
-var Log = require('log'), log = new Log(Log.WARNING);
+var Log = require('./log.js/'), log = new Log(Log.WARNING);
 
 // nice to have configuration in a distinct place
 var config;
