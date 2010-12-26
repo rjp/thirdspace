@@ -61,7 +61,7 @@ function map(list, each_callback, final_callback) {
         ilist.push(val);
         if (ilist.length == lsize) {
             final_callback(undefined, ilist);
-	    }
+        }
     };
     for(var i in list) {
         if (list.hasOwnProperty(i)) {
@@ -207,10 +207,10 @@ function reply_message(req, res, auth) {
         if (v.to) { h_message.to = v.to; }
         if (req.body.to) { h_message.to = req.body.to; }
 
-	    redis.incr('c_message', function(e, message_id) {
-	        if(e) { error(req, res, "could not get message id", 500); }
-	        log.info("new message id is "+message_id);
-	        h_message.id = message_id;
+        redis.incr('c_message', function(e, message_id) {
+            if(e) { error(req, res, "could not get message id", 500); }
+            log.info("new message id is "+message_id);
+            h_message.id = message_id;
             redis.hmset('message:'+message_id, h_message, function(e,v){
                 if(e) { error(req, res, "could not store message", 500); }
                 log.info("new message stored "+message_id);
@@ -279,13 +279,13 @@ function post_folder(req, res, auth) {
                     if(e) { error(req, res, "could not store body", 500); }
                     redis.sadd(k_folder(folder), message_id, function(e,v){
                         if(e) { error(req, res, "could not add folder", 500); }
-	                    var retval = {
-	                        id: message_id, thread: thread_id,
-	                        folder: folder, epoch: epoch
-	                    };
-	                    log.info("new body stored "+message_id);
-	                    res.writeHead(200, {'Content-Type':'application/json'});
-	                    res.end(JSON.stringify(retval));
+                        var retval = {
+                            id: message_id, thread: thread_id,
+                            folder: folder, epoch: epoch
+                        };
+                        log.info("new body stored "+message_id);
+                        res.writeHead(200, {'Content-Type':'application/json'});
+                        res.end(JSON.stringify(retval));
                     });
                 });
             });
@@ -355,13 +355,13 @@ var server = connect.createServer( connect.logger({buffer:true}), connect.bodyDe
 server.use(connect.basicAuth(authenticate, 'ua3'));
 
 exports.startup = function() {
-	server.use('/folders', connect.router(folders));
-	server.use('/folder/private', connect.router(folder_private));
-	server.use('/folder', connect.router(folder));
+    server.use('/folders', connect.router(folders));
+    server.use('/folder/private', connect.router(folder_private));
+    server.use('/folder', connect.router(folder));
     server.use('/message', connect.router(message));
-	
+    
     redis.select(config.redisdb,function(){});
-	server.listen(config.port);
-	log.info('Connect server listening on port '+config.port);
+    server.listen(config.port);
+    log.info('Connect server listening on port '+config.port);
 };
 
