@@ -167,7 +167,7 @@ function unsubscribe_folder(req, res, auth) {
     });
 }
 
-function json_folder(req, res, auth) {
+function json_folderinfo(req, res, auth) {
     var folder = req.params.name;
     var k_subs = k_user(auth, 'subs');
     var k_read = k_user(auth, 'read');
@@ -295,7 +295,7 @@ function post_folder(req, res, auth) {
 
 // finally, our actual routing tables
 
-function folder_private(app) {
+function folderinfo_private(app) {
     app.get('/', function(req, res, next){
         json_private_folder(req, res, req.remoteUser);
     });
@@ -304,6 +304,16 @@ function folder_private(app) {
     });
     app.post('/', function(req, res, next){
         post_private(req, res, req.remoteUser);
+    });
+}
+
+function folderinfo(app) {
+    // GET
+    app.get('/:name', function(req, res, next){
+        json_folderinfo(req, res, req.remoteUser);
+    });
+    app.get('/:name/:extra', function(req, res, next){
+        json_folderinfo(req, res, req.remoteUser);
     });
 }
 
@@ -337,6 +347,9 @@ function folders(app) {
     app.get('/', function(req, res, next){
         json_folders(req, res, req.remoteUser);
     });
+    app.get('/:name/:extra', function(req, res, next){
+        json_folder(req, res, req.remoteUser);
+    });
 }
 
 function message(app) {
@@ -356,10 +369,12 @@ server.use(connect.basicAuth(authenticate, 'ua3'));
 
 exports.startup = function() {
     server.use('/folders', connect.router(folders));
-    server.use('/folder/private', connect.router(folder_private));
-    server.use('/folder', connect.router(folder));
+//    server.use('/folder/private', connect.router(folder_private));
+    server.use('/folderinfo/private', connect.router(folderinfo_private));
+    server.use('/folderinfo', connect.router(folderinfo));
     server.use('/message', connect.router(message));
     
+    // TODO should make the next two lines depend on this one
     redis.select(config.redisdb,function(){});
     server.listen(config.port);
     log.info('Connect server listening on port '+config.port);
