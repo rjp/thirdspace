@@ -6,7 +6,9 @@ var fs = require('fs');
 
 var extra_data = testdata.json;
 
-var redis = redisFactory.createClient(9736, 'localhost');
+var redis = redisFactory.createClient(6379, 'localhost');
+
+var gm = [];
 
 // we only care about errors
 function null_cb(e, v) {
@@ -22,7 +24,7 @@ function cb_message(message, key, next) {
     delete message.body; // this lives elsewhere
     redis.set('body:'+message.id, body, function(e,v) {
         redis.hmset('message:'+message.id, message, function(e,v) {
-           redis.sadd('folder:'+message.folder, message.id, next);
+           redis.zadd('folder:'+message.folder, message.epoch, message.id, next);
         });
     });
 }
@@ -37,6 +39,7 @@ function load_data() { // actually load the data
                 folders[m.folder] = [];
             }
             folders[m.folder][m.id] = m.id;
+            gm[m.id] = m.epoch;
             if (m.id > last_mid) { last_mid = m.id; }
             if (m.thread > last_tid) { last_tid = m.thread; }
             messages.push(extra_data.preload[i]);
@@ -62,7 +65,8 @@ function load_data() { // actually load the data
 	        var l = extra_data.read[i];
 	        for (var j in l) {
 	            if (l.hasOwnProperty(j)) {
-	                redis.sadd('user:'+i+':read', l[j], null_cb);
+                    var e = gm[l[j]];
+	                redis.zadd('user:'+i+':read', e, l[j], null_cb);
                     delete user_subs[i][l[j]];
 	            }
 	        }
