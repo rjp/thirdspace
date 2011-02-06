@@ -9,6 +9,7 @@ var extra_data = testdata.json;
 var redis = redisFactory.createClient(6379, 'localhost');
 
 var gm = [];
+var am = [];
 
 // we only care about errors
 function null_cb(e, v) {
@@ -40,6 +41,7 @@ function load_data() { // actually load the data
             }
             folders[m.folder][m.id] = m.id;
             gm[m.id] = m.epoch;
+            am[i] = m;
             if (m.id > last_mid) { last_mid = m.id; }
             if (m.thread > last_tid) { last_tid = m.thread; }
             messages.push(extra_data.preload[i]);
