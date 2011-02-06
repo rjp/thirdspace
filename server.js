@@ -400,6 +400,19 @@ function folderinfo(app) {
 }
 
 function folder(app) {
+    // POST
+    app.post('/private/subscribe', function(req, res, next) {
+        error(req, res, "cannot resubscribe to private", 500);
+    });
+    app.post('/private/unsubscribe', function(req, res, next) {
+        error(req, res, "cannot unsubscribe from private", 500);
+    });
+    app.post('/:name/subscribe', function(req, res, next){
+        subscribe_folder(req, res, req.remoteUser);
+    });
+    app.post('/:name/unsubscribe', function(req, res, next){
+        unsubscribe_folder(req, res, req.remoteUser);
+    });
     // GET
     app.get('/:name', function(req, res, next){
         json_folder(req, res, req.remoteUser);
@@ -408,18 +421,6 @@ function folder(app) {
         json_folder(req, res, req.remoteUser);
     });
     // POST
-    app.post('/private/subscribe', function(req, res, next) {
-        error(req, res, "cannot resubscribe to private", 500);
-    });
-    app.post('/:name/subscribe', function(req, res, next){
-        subscribe_folder(req, res, req.remoteUser);
-    });
-    app.post('/private/unsubscribe', function(req, res, next) {
-        error(req, res, "cannot unsubscribe from private", 500);
-    });
-    app.post('/:name/unsubscribe', function(req, res, next){
-        unsubscribe_folder(req, res, req.remoteUser);
-    });
     app.post('/:name', function(req, res, next){
         post_folder(req, res, req.remoteUser);
     });
