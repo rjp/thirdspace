@@ -6,7 +6,11 @@ var fs = require('fs');
 
 var extra_data = testdata.json;
 
-var redis = redisFactory.createClient(6379, 'localhost');
+var redisport = 6379;
+if (process.env.redisport !== undefined) {
+    redisport = parseInt(process.env.redisport, 10);
+}
+var redis = redisFactory.createClient(redisport, 'localhost');
 
 var gm = [];
 var am = [];
