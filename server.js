@@ -152,11 +152,10 @@ function get_folder_unread(folder, user, callback) {
     var k_fold = k_folder(folder);
     var k_read = k_user(user, 'read');
     var unread_edit = 0;
-    sys.puts("kf:"+k_fold);
 
     redis.sismember(k_user(user, 'subs'), canon_folder(folder), function(e, s){
         redis.zcard(k_fold, function(e, c){
-            if (e) { sys.puts(sys.inspect(e)); throw(e); }
+            if (e) { throw(e); }
             var t = 'zcard:'+k_read+':'+k_fold;
 
             var f = zdiffstore_noscores;
@@ -184,7 +183,6 @@ function json_folder(req, res, auth) {
         redis.sismember(k_subs, canon_folder(folder), function(e, s){
             if (e) { throw(e); }
             retval['subscribed'] = s ? 'true' : 'false';
-            sys.puts("zdiffstore "+k_read+" "+k_fold);
             var f = zdiffstore_noscores;
             if (unread_edit) { f = zdiffstore_withscores; }
             f(auth, k_read, k_fold, false, function(e,s){
@@ -282,7 +280,6 @@ function reply_message(req, res, auth) {
 
     redis.hgetall(k_mid, function(e, v){
         if (e) { error(req, res, "Exception:"+e, 500); }
-        sys.puts(sys.inspect(v));
         var h_message = { from:auth };
         h_message.subject = req.body.subject || v.subject;
         h_message.folder = req.body.folder || v.folder;
@@ -319,8 +316,6 @@ function json_message(req, res, auth) {
     var id = req.params.id;
     var k_mid = k_message(id);
     var k_bid = k_body(id);
-
-    sys.puts("km: "+k_mid+", kb: "+k_bid);
 
     redis.hgetall(k_mid, function(e, v){
         if (e) { error(req, res, "Exception:"+e, 500); }
