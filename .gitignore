@@ -33,3 +33,5 @@ Backup[ ]of[ ]*.key/
 Backup[ ]of[ ]*.numbers/
 
 push
+testjunknull.rdb
+testrun.log
