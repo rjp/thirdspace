@@ -22,7 +22,7 @@ exports['subscribe-test'] = function(test){
         // TODO this should test that we're subscribed to all our original
         // folders + test but that's tricky given we get a list back from
         // /folders and deepEqual can't compare differently sorted lists
-        tester.rjp.get('/folder/test', function(got, code){
+        tester.rjp.get('/folderinfo/test', function(got, code){
             test.equal(got.sub, 1, 'subscribed ok?');
             test.done();
         });
@@ -34,7 +34,7 @@ exports['unsubscribe-test'] = function(test){
         test.expect(3);
         test.equal(code, 200, '200 OK');
         test.deepEqual(got, {"folder":"test"}, "Folder TEST");
-        tester.rjp.get('/folder/test', function(got, code){
+        tester.rjp.get('/folderinfo/test', function(got, code){
             test.equal(got.sub, 0, 'subscribed ok?');
             test.done();
         });
