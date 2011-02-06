@@ -359,7 +359,7 @@ function post_folder(req, res, auth) {
                 log.info("new message stored "+message_id);
                 redis.set('body:'+message_id, body, function(e, v){
                     if(e) { error(req, res, "could not store body", 500); }
-                    redis.sadd(k_folder(folder), message_id, function(e,v){
+                    redis.zadd(k_folder(folder), h_message.epoch, message_id, function(e,v){
                         if(e) { error(req, res, "could not add folder", 500); }
                         var retval = {
                             id: message_id, thread: thread_id,
