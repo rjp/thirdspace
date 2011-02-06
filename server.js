@@ -37,7 +37,7 @@ function authenticate(user, pass, success, failure) {
     });
 }
 
-function zdiffstore_withscores(user, s_one, s_two, callback) {
+function zdiffstore_withscores(user, s_one, s_two, just_count, callback) {
     var inter = 'inter:' + user + ':' + s_one + ':zdiff:' + s_two;
     var finish = 'final:' + user + ':' + s_one + ':zdiff:' + s_two;
     var w1 = {}; w1[s_one] = 1; w1[s_two] = -1;
@@ -48,14 +48,18 @@ function zdiffstore_withscores(user, s_one, s_two, callback) {
             if (e) { throw(e); }
             redis.zinterstore(finish, w2, 'max', function(e, s) {
                 if (e) { throw(e); }
-                redis.zrange(finish, 0, -1, callback);
+                if (just_count === true) {
+                    redis.zcard(finish, callback);
+                } else {
+                    redis.zrange(finish, 0, -1, callback);
+                }
             });
         });
     });
 }
 
 
-function zdiffstore_noscores(user, s_one, s_two, callback) {
+function zdiffstore_noscores(user, s_one, s_two, just_count, callback) {
     var inter = 'inter:' + user + ':' + s_one + ':zdiff:' + s_two;
     var finish = 'final:' + user + ':' + s_one + ':zdiff:' + s_two;
     var w1 = {}; w1[s_one] = '-inf'; w1[s_two] = 1;
@@ -66,7 +70,11 @@ function zdiffstore_noscores(user, s_one, s_two, callback) {
             if (e) { throw(e); }
             redis.zinterstore(finish, w2, 'max', function(e, s) {
                 if (e) { throw(e); }
-                redis.zrange(finish, 0, -1, callback);
+                if (just_count === true) {
+                    redis.zcard(finish, callback);
+                } else {
+                    redis.zrange(finish, 0, -1, callback);
+                }
             });
         });
     });
@@ -141,13 +149,21 @@ function error(req, res, message, code) {
 // work out unread count for a folder for a user
 function get_folder_unread(folder, user, callback) {
     var c;
+    var k_fold = k_folder(folder);
+    var k_read = k_user(user, 'read');
+    var unread_edit = 0;
+    sys.puts("kf:"+k_fold);
+
     redis.sismember(k_user(user, 'subs'), canon_folder(folder), function(e, s){
-        redis.scard(k_folder(folder), function(e, c){
-            if (e) { throw(e); }
-            redis.sdiff(k_folder(folder), k_user(user, 'read'), function(e,v){
-                if (e) { throw(e); }
+        redis.zcard(k_fold, function(e, c){
+            if (e) { sys.puts(sys.inspect(e)); throw(e); }
+            var t = 'zcard:'+k_read+':'+k_fold;
+
+            var f = zdiffstore_noscores;
+            if (unread_edit) { f = zdiffstore_withscores; }
+            f(user, k_read, k_fold, true, function(e,v){
                 callback(undefined,
-                    {folder:folder, unread:v.length, count: c, sub: s});
+                    {folder:folder, unread:v, count: c, sub: s});
             });
         });
     });
@@ -171,14 +187,14 @@ function json_folder(req, res, auth) {
             sys.puts("zdiffstore "+k_read+" "+k_fold);
             var f = zdiffstore_noscores;
             if (unread_edit) { f = zdiffstore_withscores; }
-            f(auth, k_read, k_fold, function(e,s){
+            f(auth, k_read, k_fold, false, function(e,s){
                 retval['ids'] = s;
                 map(s, function(f,i,c) {
                     redis.hgetall(k_message(f), c);
                 }, function(e, newlist) {
                     retval['messages'] = newlist;
                     res.writeHead(200, {'Content-Type':'application/json'});
-                    res.end(JSON.stringify(retval));
+                    res.end(JSON.stringify(newlist));
                 });
             });
         });
