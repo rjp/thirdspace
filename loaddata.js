@@ -11,6 +11,7 @@ if (process.env.redisport !== undefined) {
     redisport = parseInt(process.env.redisport, 10);
 }
 var redis = redisFactory.createClient(redisport, 'localhost');
+redis.select(2,function(){});
 
 var gm = [];
 var am = [];
