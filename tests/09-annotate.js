@@ -13,7 +13,7 @@ exports['annotate-1'] = function(test){
         tester.rjp.get('/message/1', function(got, code){
             test.equal(got.anno_from, 'Correction!', 'annotated ok');
             test.done();
-        }
+        });
     });
 };
 
@@ -24,7 +24,7 @@ exports['annotate-2'] = function(test) {
         tester.rjp.get('/message/2', function(got, code){
             test.equal(got.anno_to, 'Flanges?', 'annotated ok');
             test.done();
-        }
+        });
     });
 }
 
@@ -54,7 +54,7 @@ exports['annotate-5'] = function(test) {
             test.equal(got.anno_to, 'Flanges?', 'annotated ok');
             test.equal(got.anno_from, 'Puntime', 'annotated ok');
             test.done();
-        }
+        });
     });
 };
 
