@@ -21,6 +21,16 @@ sys.puts(sys.inspect(config));
 
 var redis = redisFactory.createClient(config.redisport);
 
+function remove_undef(list) {
+    var outlist = [];
+    for (var i in list) {
+        if (list.hasOwnProperty(i)) {
+            if (list[i] != undefined) { outlist.push(list[i]); }
+        }
+    }
+    return outlist;
+}
+
 // this should probably be smarter
 function authenticate(user, pass, success, failure) {
     log.info('pass is '+pass);
@@ -202,15 +212,40 @@ function json_folder(req, res, auth) {
 function json_folders(req, res, auth) {
     var k_subs = k_user(auth, 'subs');
     var k_read = k_user(auth, 'read');
-    redis.smembers(k_subs, function(err, subs) {
+
+    var filter = req.params.extra;
+    if (filter === undefined) { filter = ""; }
+
+    /* default filtering is all folders */
+    var filters = ["true"];
+    var filter_callback = function(a,f,r,c) { c(true, r); };
+
+    /* how to create stackable filters? */
+    if (filter.match(/\bsubscribed\b/)) { filters.push("d.sub"); }
+    if (filter.match(/\bunread\b/))     { filters.push("d.unread > 0"); }
+
+    var make_func = "ffilter=function(a,f,d,c){if("+filters.join(' && ')+"){c(true,d);}else{c(false,undefined);}}";
+    eval(make_func);
+
+    redis.keys("folder:*", function(err, subs) {
         var r = [];
         if(err) { throw(err); } // TODO fix this up
         buffer_to_strings(subs);
+        /* redis returns the full keyname, remove the folder: ourselves */
+        for (var i in subs) {
+            if (subs.hasOwnProperty(i)) { subs[i] = subs[i].substr(7); }
+        }
         map(subs, function(f, i, c) {
-                get_folder_unread(f, auth, c);
+                get_folder_unread(f, auth, function(e, r) {
+                    ffilter(auth, f, r, function(e, t){
+                        if (e == true) { c(undefined, t); }
+                        else           { c(undefined, undefined); }
+                    });
+                });
             }, function(e, newlist) {
+                var outlist = remove_undef(newlist);
                 res.writeHead(200, {'Content-Type':'application/json'});
-                res.end(JSON.stringify(newlist));
+                res.end(JSON.stringify(outlist));
             }
         );
     });
@@ -430,8 +465,8 @@ function folders(app) {
     app.get('/', function(req, res, next){
         json_folders(req, res, req.remoteUser);
     });
-    app.get('/:name/:extra', function(req, res, next){
-        json_folder(req, res, req.remoteUser);
+    app.get('/:extra', function(req, res, next){
+        json_folders(req, res, req.remoteUser);
     });
 }
 
