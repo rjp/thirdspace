@@ -481,6 +481,12 @@ function message(app) {
     });
 }
 
+function annotate(app) {
+    app.post('/:id', function(req, res, next) {
+        annotate_message(req, res, req.remoteUser);
+    });
+}
+
 // create a bogstandard authenticating connect server
 var server = connect.createServer( connect.logger({buffer:true}), connect.bodyDecoder() );
 server.use(connect.basicAuth(authenticate, 'ua3'));
@@ -492,6 +498,7 @@ exports.startup = function() {
     server.use('/folderinfo', connect.router(folderinfo));
     server.use('/folder', connect.router(folder));
     server.use('/message', connect.router(message));
+    server.use('/annotate', connect.router(annotate));
 
     // TODO should make the next two lines depend on this one
     redis.select(config.redisdb,function(){});
