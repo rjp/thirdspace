@@ -156,6 +156,11 @@ function error(req, res, message, code) {
     res.end(JSON.stringify(ejson));
 }
 
+function success(req, res, message) {
+    res.writeHead(200, {'Content-Type':'application/json'});
+    res.end(JSON.stringify(message));
+}
+
 // work out unread count for a folder for a user
 function get_folder_unread(folder, user, callback) {
     var c;
