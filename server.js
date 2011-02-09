@@ -415,6 +415,11 @@ function post_folder(req, res, auth) {
     });
 }
 
+function annotate_message(req, res, auth) {
+    var id = req.params.id;
+    success(req, res, {"annotated":id});
+}
+
 // finally, our actual routing tables
 
 function folderinfo_private(app) {
