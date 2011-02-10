@@ -417,7 +417,37 @@ function post_folder(req, res, auth) {
 
 function annotate_message(req, res, auth) {
     var id = req.params.id;
-    success(req, res, {"annotated":id});
+    var annotate = req.body.annotate;
+    var epoch = parseInt(new Date().getTime() / 1000, 10);
+
+    if (annotate.length == 0) {
+        error(req, res, "Annotation is zero length", 500);
+        return;
+    }
+
+    if (annotate.length > 80) {
+        error(req, res, "Annotation is >80 characters", 500);
+        return;
+    }
+
+    redis.hgetall(k_message(id), function(e,h) {
+        sys.log(sys.inspect(h));
+        if (h.from != auth && h.to != auth) {
+            error(req, res, "Cannot annotate "+id+" by "+auth, 401);
+            return;
+        }
+        /* already annotated by to */
+        if (h.to == auth) {
+            sys.log("TO trying to annotate");
+            if (h.anno_to != undefined) {
+                sys.log("TO annotation already exists");
+                error(req, res, "Cannot double-annotate "+id, 401);
+                return;
+            }
+            success(req, res, {"annotated":id,"anno_to":true,"by":auth});
+            return;
+        }
+    });
 }
 
 // finally, our actual routing tables
