@@ -415,6 +415,14 @@ function post_folder(req, res, auth) {
     });
 }
 
+function ar(req, res, code, data) {
+    if (code == 200) {
+        success(req, res, data);
+    } else {
+        error(req, res, data, code);
+    }
+}
+
 function annotate_message(req, res, auth) {
     var id = req.params.id;
     var annotate = req.body.annotate;
@@ -431,21 +439,37 @@ function annotate_message(req, res, auth) {
     }
 
     redis.hgetall(k_message(id), function(e,h) {
-        sys.log(sys.inspect(h));
         if (h.from != auth && h.to != auth) {
-            error(req, res, "Cannot annotate "+id+" by "+auth, 401);
-            return;
+            ar(req, res, 401, "Cannot annotate "+id+" by "+auth);
         }
+        /* already annotated by from */
+        if (h.from == auth) {
+            if (h.anno_from != undefined) {
+                ar(req, res, 401, "Cannot double-annotate "+id);
+            } else {
+	            redis.hmset(k_message(id), {'epoch':epoch,'anno_from':annotate}, function(e,s){
+	                if (e) { throw(e); }
+	                redis.zadd(k_folder(h.folder), epoch, id, function(e,s){
+	                    if (e) { throw(e); }
+	                    ar(req, res, 200, {"annotated":id,"anno_from":true,"by":auth});
+	                });
+	            });
+            }
+        }
+
         /* already annotated by to */
         if (h.to == auth) {
-            sys.log("TO trying to annotate");
             if (h.anno_to != undefined) {
-                sys.log("TO annotation already exists");
-                error(req, res, "Cannot double-annotate "+id, 401);
-                return;
+                ar(req, res, 401, "Cannot double-annotate "+id);
+            } else {
+	            redis.hmset(k_message(id), {'epoch':epoch,'anno_to':annotate}, function(e,s){
+	                if (e) { throw(e); }
+	                redis.zadd(k_folder(h.folder), epoch, id, function(e,s){
+	                    if (e) { throw(e); }
+	                    ar(req, res, 200, {"annotated":id,"anno_to":true,"by":auth});
+	                });
+	            });
             }
-            success(req, res, {"annotated":id,"anno_to":true,"by":auth});
-            return;
         }
     });
 }
