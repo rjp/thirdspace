@@ -71,13 +71,20 @@
     "folders": {
         "t00": {
             "rjp": [
-                {"folder":"chat","unread":3,"count":5,"sub":1},
-                {"folder":"mine","unread":1,"count":2,"sub":1}
-            ],
-            "techno": [ 
+                {"folder":"mine","unread":1,"count":2,"sub":1},
+                {"folder":"test","unread":3,"count":3,"sub":0},
                 {"folder":"chat","unread":3,"count":5,"sub":1}
             ],
-            "lurker": []
+            "techno": [ 
+                {"folder":"mine","unread":1,"count":2,"sub":1},
+                {"folder":"test","unread":3,"count":3,"sub":0},
+                {"folder":"chat","unread":3,"count":5,"sub":1}
+            ],
+            "lurker": [
+                {"folder":"mine","unread":1,"count":2,"sub":1},
+                {"folder":"test","unread":3,"count":3,"sub":0},
+                {"folder":"chat","unread":3,"count":5,"sub":1}
+            ]
         },
         "t01": {
             "rjp": {
