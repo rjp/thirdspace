@@ -156,6 +156,11 @@ function error(req, res, message, code) {
     res.end(JSON.stringify(ejson));
 }
 
+function success(req, res, message) {
+    res.writeHead(200, {'Content-Type':'application/json'});
+    res.end(JSON.stringify(message));
+}
+
 // work out unread count for a folder for a user
 function get_folder_unread(folder, user, callback) {
     var c;
@@ -407,6 +412,65 @@ function post_folder(req, res, auth) {
                 });
             });
         });
+    });
+}
+
+function ar(req, res, code, data) {
+    if (code == 200) {
+        success(req, res, data);
+    } else {
+        error(req, res, data, code);
+    }
+}
+
+function annotate_message(req, res, auth) {
+    var id = req.params.id;
+    var annotate = req.body.annotate;
+    var epoch = parseInt(new Date().getTime() / 1000, 10);
+
+    if (annotate.length == 0) {
+        error(req, res, "Annotation is zero length", 500);
+        return;
+    }
+
+    if (annotate.length > 80) {
+        error(req, res, "Annotation is >80 characters", 500);
+        return;
+    }
+
+    redis.hgetall(k_message(id), function(e,h) {
+        if (h.from != auth && h.to != auth) {
+            ar(req, res, 401, "Cannot annotate "+id+" by "+auth);
+        }
+        /* already annotated by from */
+        if (h.from == auth) {
+            if (h.anno_from != undefined) {
+                ar(req, res, 401, "Cannot double-annotate "+id);
+            } else {
+	            redis.hmset(k_message(id), {'epoch':epoch,'anno_from':annotate}, function(e,s){
+	                if (e) { throw(e); }
+	                redis.zadd(k_folder(h.folder), epoch, id, function(e,s){
+	                    if (e) { throw(e); }
+	                    ar(req, res, 200, {"annotated":id,"anno_from":true,"by":auth});
+	                });
+	            });
+            }
+        }
+
+        /* already annotated by to */
+        if (h.to == auth) {
+            if (h.anno_to != undefined) {
+                ar(req, res, 401, "Cannot double-annotate "+id);
+            } else {
+	            redis.hmset(k_message(id), {'epoch':epoch,'anno_to':annotate}, function(e,s){
+	                if (e) { throw(e); }
+	                redis.zadd(k_folder(h.folder), epoch, id, function(e,s){
+	                    if (e) { throw(e); }
+	                    ar(req, res, 200, {"annotated":id,"anno_to":true,"by":auth});
+	                });
+	            });
+            }
+        }
     });
 }
 

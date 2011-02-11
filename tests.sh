@@ -11,7 +11,7 @@ sleep 2
 redis-cli -p $redisport < testdata >/dev/null
 :>testrun.log
 env redisport=$redisport node loaddata.js >> testrun.log
-env redisport=$redisport ./run-tests 2>&1 >> testrun.log
+env redisport=$redisport ./run-tests 2>&1 | tee results.html >> testrun.log
 result=$?
 echo shutdown | redis-cli -p $redisport >/dev/null
 # this strips the colouring because it confuses integrity
