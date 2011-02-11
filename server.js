@@ -352,6 +352,11 @@ function reply_message(req, res, auth) {
     });
 }
 
+function json_thread(req, res, auth) {
+    var id = req.params.id;
+    success(req, res, {"thread":id});
+}
+
 function json_message(req, res, auth) {
     var id = req.params.id;
     var k_mid = k_message(id);
@@ -534,6 +539,13 @@ function folders(app) {
     });
 }
 
+function thread(app) {
+    // GET
+    app.get('/:id', function(req, res, next) {
+        json_thread(req, res, req.remoteUser);
+    });
+}
+
 function message(app) {
     // GET
     app.get('/:id', function(req, res, next) {
@@ -563,6 +575,7 @@ exports.startup = function() {
     server.use('/folder', connect.router(folder));
     server.use('/message', connect.router(message));
     server.use('/annotate', connect.router(annotate));
+    server.use('/thread', connect.router(thread));
 
     // TODO should make the next two lines depend on this one
     redis.select(config.redisdb,function(){});
