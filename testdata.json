@@ -75,9 +75,15 @@
                 {"folder":"mine","unread":1,"count":2,"sub":1}
             ],
             "techno": [ 
-                {"folder":"chat","unread":3,"count":5,"sub":1}
+                {"folder":"mine","unread":2,"count":2,"sub":0},
+                {"folder":"chat","unread":3,"count":5,"sub":1},
+                {"folder":"test","unread":3,"count":3,"sub":0}
             ],
-            "lurker": []
+            "lurker": [
+                {"folder":"mine","unread":2,"count":2,"sub":0},
+                {"folder":"chat","unread":5,"count":5,"sub":0},
+                {"folder":"test","unread":3,"count":3,"sub":0}
+            ]
         },
         "t01": {
             "rjp": {
