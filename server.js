@@ -141,6 +141,10 @@ function k_folder(foldername) {
     return 'folder:'+canon_folder(foldername);
 }
 
+function k_thread(thread) {
+    return 'thread:'+parseInt(thread, 10);
+}
+
 function k_message(id) {
     return 'message:'+parseInt(id, 10);
 }
@@ -354,7 +358,14 @@ function reply_message(req, res, auth) {
 
 function json_thread(req, res, auth) {
     var id = req.params.id;
-    success(req, res, {"thread":id});
+    redis.zrange(k_thread(id), 0, -1, function(e, v){
+        if (e) { throw(e); }
+        if (v === null) {
+            error(req, res, "no such thread", 404);
+        } else {
+            success(req, res, v);
+        }
+    });
 }
 
 function json_message(req, res, auth) {
