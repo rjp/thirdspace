@@ -363,7 +363,11 @@ function json_thread(req, res, auth) {
         if (v === null) {
             error(req, res, "no such thread", 404);
         } else {
-            success(req, res, v);
+            map(v, function(f,i,c) {
+                redis.hgetall(k_message(f), c);
+            }, function(e, newlist) {
+                success(req, res, newlist);
+            });
         }
     });
 }
