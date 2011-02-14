@@ -406,13 +406,16 @@ function post_folder(req, res, auth) {
                     if(e) { error(req, res, "could not store body", 500); }
                     redis.zadd(k_folder(folder), h_message.epoch, message_id, function(e,v){
                         if(e) { error(req, res, "could not add folder", 500); }
-                        var retval = {
-                            id: message_id, thread: thread_id,
-                            folder: folder, epoch: epoch
-                        };
-                        log.info("new body stored "+message_id);
-                        res.writeHead(200, {'Content-Type':'application/json'});
-                        res.end(JSON.stringify(retval));
+                        redis.zadd(k_thread(thread_id), h_message.epoch, message_id, function(e, v){
+                            if(e) { error(req, res, "could not add thread", 500); }
+	                        var retval = {
+	                            id: message_id, thread: thread_id,
+	                            folder: folder, epoch: epoch
+	                        };
+	                        log.info("new body stored "+message_id);
+	                        res.writeHead(200, {'Content-Type':'application/json'});
+	                        res.end(JSON.stringify(retval));
+	                    });
                     });
                 });
             });
