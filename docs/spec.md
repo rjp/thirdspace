@@ -154,7 +154,7 @@ count is the number of messages marked as read.
 
 Mark message(s) as unread. Same format as /read.
 
-## GET /thread/XYZ 
+## GET /thread/XYZ &#x2713;
 
 Get messages in thread XYZ without bodies. Same response format as /folder/XYZ.
 
