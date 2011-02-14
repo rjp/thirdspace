@@ -1,9 +1,16 @@
 #!/usr/bin/env node
+var sys = require('sys');
+
+sys.log("start: "+(new Date).getTime());
 require.paths.unshift(__dirname + '/deps');
 var ua3 = require('./server');
 
 ua3.startup();
 
 var reporter = require('./nodeunit').reporters.html;
-console.log('ua3 started up, waiting 5 seconds before testing');
-setTimeout(function(){ reporter.run(['tests']) }, 5000);
+console.log('ua3 started up, waiting 500ms before testing');
+setTimeout(function(){
+    sys.log("start tests: "+(new Date).getTime());
+    reporter.run(['tests']);
+    sys.log("stop tests: "+(new Date).getTime());
+}, 500);

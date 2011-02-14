@@ -35,3 +35,5 @@ Backup[ ]of[ ]*.numbers/
 push
 testjunknull.rdb
 testrun.log
+*.html
+*.log

@@ -52,6 +52,7 @@
 		        "body":"I like to rub horses.", "thread":1 
 		    }
     },
+    "threads":{ "t_1":[1,2,10], "t_2":[3], "t_3":[4], "t_4":[5,7] },
     "messages":{
         "m_eleven": {
             "post":{
