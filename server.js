@@ -359,15 +359,19 @@ function json_message(req, res, auth) {
 
     redis.hgetall(k_mid, function(e, v){
         if (e) { error(req, res, "Exception:"+e, 500); }
-        redis.get(k_bid, function(e, b) {
-            if (e) { error(req, res, "Exception:"+e, 500); }
-            if (v.id === undefined || v.id !== id) {
-                error(req, res, "No such message:"+id, 404);
-            }
-            v.body = b;
-            res.writeHead(200, {'Content-Type':'application/json'});
-            res.end(JSON.stringify(v));
-        });
+        if (v === null) {
+            error(req, res, "Message "+id+" not found", 404);
+        } else {
+	        redis.get(k_bid, function(e, b) {
+	            if (e) { error(req, res, "Exception:"+e, 500); }
+	            if (v.id === undefined || v.id !== id) {
+	                error(req, res, "No such message:"+id, 404);
+	            }
+	            v.body = b;
+	            res.writeHead(200, {'Content-Type':'application/json'});
+	            res.end(JSON.stringify(v));
+	        });
+        }
     });
 }
 
