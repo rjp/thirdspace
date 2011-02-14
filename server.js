@@ -362,6 +362,14 @@ function reply_message(req, res, auth) {
     });
 }
 
+function read_message(req, res, auth) {
+    success(req, res, {count:99});
+}
+
+function unread_message(req, res, auth) {
+    success(req, res, {count:99});
+}
+
 function get_headers(f, c) {
     redis.hgetall(k_message(f), c);
 }
@@ -609,6 +617,12 @@ function message(app) {
         json_message(req, res, req.remoteUser);
     });
     // POST
+    app.post('/read', function(req, res, next) {
+        read_message(req, res, req.remoteUser);
+    });
+    app.post('/unread', function(req, res, next) {
+        unread_message(req, res, req.remoteUser);
+    });
     app.post('/:id', function(req, res, next) {
         reply_message(req, res, req.remoteUser);
     });
