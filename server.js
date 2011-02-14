@@ -365,17 +365,12 @@ function reply_message(req, res, auth) {
 function read_message(req, res, auth) {
     var messages = req.body.messages;
     var setmap = {};
-    log.warning(sys.inspect(messages));
     map(messages, function(f,i,c){
         redis.hget(k_message(f), 'epoch', function(e, v){
-            setmap[f] = v;
-            c(undefined, f);
+            redis.zadd(k_user(auth, 'read'), v, f, c);
         });
     }, function(e, newlist) {
         var outlist = remove_undef(newlist);
-        outlist.sort(function(a,b){
-            return a.id - b.id;
-        });
         success(req, res, {count:outlist.length});
     });
 }
