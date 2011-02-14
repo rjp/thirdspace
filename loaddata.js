@@ -31,6 +31,7 @@ function cb_message(message, key, next) {
     redis.set('body:'+message.id, body, function(e,v) {
         redis.hmset('message:'+message.id, message, function(e,v) {
            redis.zadd('folder:'+message.folder, message.epoch, message.id, next);
+           redis.zadd('thread:'+message.thread, message.epoch, message.id, next);
         });
     });
 }
