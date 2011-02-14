@@ -158,7 +158,7 @@ Mark message(s) as unread. Same format as /read.
 
 Get messages in thread XYZ without bodies. Same response format as /folder/XYZ.
 
-## GET /thread/XYZ/full
+## GET /thread/XYZ/full &#x2713;
 
 Get messages in thread XYZ with bodies. Same return format as /folder/XYZ.
 
