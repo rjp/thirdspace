@@ -249,6 +249,11 @@ function json_folders(req, res, auth) {
                 });
             }, function(e, newlist) {
                 var outlist = remove_undef(newlist);
+                outlist.sort(function(a,b){
+                    if (a.folder < b.folder) return -1;
+                    if (a.folder > b.folder) return 1;
+                    return 0;
+                });
                 res.writeHead(200, {'Content-Type':'application/json'});
                 res.end(JSON.stringify(outlist));
             }
