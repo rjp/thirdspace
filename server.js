@@ -362,15 +362,38 @@ function reply_message(req, res, auth) {
     });
 }
 
+function get_headers(f, c) {
+    redis.hgetall(k_message(f), c);
+}
+
+function get_full(f, c) {
+    redis.get(k_body(f), function(e, b){
+        redis.hgetall(k_message(f), function(e, v){
+            if (v === null) {
+                c(undefined, undefined);
+            } else {
+                v.body = b;
+                c(undefined, v);
+            }
+        });
+    });
+}
+
 function json_thread(req, res, auth) {
     var id = req.params.id;
+    var extra = req.params.extra;
+
     redis.zrange(k_thread(id), 0, -1, function(e, v){
         if (e) { throw(e); }
         if (v === null) {
             error(req, res, "no such thread", 404);
         } else {
             map(v, function(f,i,c) {
-                redis.hgetall(k_message(f), c);
+                if (extra === 'full') {
+                    get_full(f, c);
+                } else {
+                    get_headers(f, c);
+                }
             }, function(e, newlist) {
                 success(req, res, newlist);
             });
@@ -569,6 +592,9 @@ function folders(app) {
 
 function thread(app) {
     // GET
+    app.get('/:id/:extra', function(req, res, next) {
+        json_thread(req, res, req.remoteUser);
+    });
     app.get('/:id', function(req, res, next) {
         json_thread(req, res, req.remoteUser);
     });
