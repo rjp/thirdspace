@@ -228,6 +228,7 @@ function json_folders(req, res, auth) {
     /* how to create stackable filters? */
     if (filter.match(/\bsubscribed\b/)) { filters.push("d.sub"); }
     if (filter.match(/\bunread\b/))     { filters.push("d.unread > 0"); }
+    if (filter.match(/\ball\b/))        { filters.push("1"); }
 
     var make_func = "ffilter=function(a,f,d,c){if("+filters.join(' && ')+"){c(true,d);}else{c(false,undefined);}}";
     eval(make_func);
