@@ -363,7 +363,21 @@ function reply_message(req, res, auth) {
 }
 
 function read_message(req, res, auth) {
-    success(req, res, {count:99});
+    var messages = req.body.messages;
+    var setmap = {};
+    log.warning(sys.inspect(messages));
+    map(messages, function(f,i,c){
+        redis.hget(k_message(f), 'epoch', function(e, v){
+            setmap[f] = v;
+            c(undefined, f);
+        });
+    }, function(e, newlist) {
+        var outlist = remove_undef(newlist);
+        outlist.sort(function(a,b){
+            return a.id - b.id;
+        });
+        success(req, res, {count:outlist.length});
+    });
 }
 
 function unread_message(req, res, auth) {
