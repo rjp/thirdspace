@@ -23,7 +23,7 @@ Users and folders are keyed by lower-cased name with non-alphanums convert to un
 
 will be seen by Techno in Private but creating a new folder called "private" is not possible.
 
-## GET /folders
+## GET /folders &#x2713;
 
 All folders you can access.
 
@@ -38,17 +38,17 @@ You receive a list:
 
 Count is all the non-expired messages in a folder. Count and Unread will always be present, even if 0.
 
-## GET /folders/subscribed
+## GET /folders/subscribed &#x2713;
 
 Identical to /folders but restricted to subscribed folders.
 
-## GET /folders/unread
+## GET /folders/unread &#x2713;
 
 Identical to /folders but restricted to subscribed folders with unread messages.
 
-You can remove the implied filter by using GET /folders/all/unread.
+You can remove the implied filter by using GET /folders/all+unread &#x2713;
 
-## POST /folder/XYZ/subscribe
+## POST /folder/XYZ/subscribe &#x2713;
 
 Subscribe to folder XYZ
 
@@ -60,7 +60,7 @@ You receive:
 
         { "folder":"A" }
 
-## POST /folder/XYZ/unsubscribe
+## POST /folder/XYZ/unsubscribe &#x2713;
 
 Unsubscribe from folder XYZ
 
@@ -72,7 +72,7 @@ You receive:
 
         { "folder":"A" }
 
-## GET /folder/XYZ
+## GET /folder/XYZ &#x2713;
 
 All messages in folder XYZ without bodies. 
 
@@ -95,7 +95,7 @@ Unread messages in folder XYZ without bodies. Same response format as /folder/XY
 
 All non-expired messages in folder XYZ with bodies.
 
-## POST /folder/XYZ
+## POST /folder/XYZ &#x2713;
 
 Create a message in folder XYZ.
 
@@ -109,7 +109,7 @@ You receive:
 
 Thread is an autosequenced ID.
 
-## GET /message/XYZ
+## GET /message/XYZ &#x2713;
 
 Get single message XYZ.
 
@@ -117,7 +117,7 @@ You receive:
 
         { "folder":"UA-Dev", "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874, "body":"Hmmm, yes. One of the server's two nameservers is down." }
 
-## POST /message/XYZ
+## POST /message/XYZ &#x2713;
 
 Create a message in reply to message XYZ. 
 
@@ -154,7 +154,7 @@ count is the number of messages marked as read.
 
 Mark message(s) as unread. Same format as /read.
 
-## GET /thread/XYZ
+## GET /thread/XYZ 
 
 Get messages in thread XYZ without bodies. Same response format as /folder/XYZ.
 
