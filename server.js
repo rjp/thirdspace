@@ -376,7 +376,14 @@ function read_message(req, res, auth) {
 }
 
 function unread_message(req, res, auth) {
-    success(req, res, {count:99});
+    var messages = req.body.messages;
+    var setmap = {};
+    map(messages, function(f,i,c){
+        redis.zrem(k_user(auth, 'read'), f, c);
+    }, function(e, newlist) {
+        var outlist = remove_undef(newlist);
+        success(req, res, {count:outlist.length});
+    });
 }
 
 function get_headers(f, c) {
