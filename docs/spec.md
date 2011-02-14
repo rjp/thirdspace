@@ -135,7 +135,7 @@ You receive:
 
 to and subject default to the ones in XYZ. Attempts to change thread will be ignored.
 
-## POST /message/read
+## POST /message/read &#x2713;
 
 Mark message(s) as read.
 
@@ -150,7 +150,7 @@ You receive:
 count is the number of messages marked as read.
 *(what about "stay caught up"? - techno)*
 
-## POST /message/unread
+## POST /message/unread &#x2713;
 
 Mark message(s) as unread. Same format as /read.
 
