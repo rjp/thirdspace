@@ -30,7 +30,9 @@ for (var u in m) {
             var k = m[u][f][mn];
             if (expected[u] == undefined) { expected[u] = []; }
             if (expected[u][f] == undefined) { expected[u][f] = []; }
-            var o = testdata.json.preload[k];
+            var o = {};
+            var source = testdata.json.preload[k];
+            for (var i in source) { o[i] = source[i]; }
             delete o['body'];
             expected[u][f].push(o);
         }
