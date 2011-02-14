@@ -372,6 +372,7 @@ function get_full(f, c) {
             if (v === null) {
                 c(undefined, undefined);
             } else {
+                if (b === null) { b = ''; }
                 v.body = b;
                 c(undefined, v);
             }
@@ -382,6 +383,8 @@ function get_full(f, c) {
 function json_thread(req, res, auth) {
     var id = req.params.id;
     var extra = req.params.extra;
+    var fetcher = get_headers;
+    if (extra === 'full') { fetcher = get_full; }
 
     redis.zrange(k_thread(id), 0, -1, function(e, v){
         if (e) { throw(e); }
@@ -389,13 +392,13 @@ function json_thread(req, res, auth) {
             error(req, res, "no such thread", 404);
         } else {
             map(v, function(f,i,c) {
-                if (extra === 'full') {
-                    get_full(f, c);
-                } else {
-                    get_headers(f, c);
-                }
+                fetcher(f, c);
             }, function(e, newlist) {
-                success(req, res, newlist);
+                var outlist = remove_undef(newlist);
+                outlist.sort(function(a,b){
+                    return a.id - b.id;
+                });
+                success(req, res, outlist);
             });
         }
     });
