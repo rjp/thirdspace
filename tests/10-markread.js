@@ -33,3 +33,15 @@ exports['markread-2'] = function(test){
     });
 };
 
+exports['markread-3'] = function(test){
+    test.expect(3);
+    tester.rjp.post('/thread/read', {thread:3}, function(got, code){
+        test.equal(code, 200, 'can mark threads as read');
+        test.deepEqual(got, {count:2}, 'one thread, two messages marked read');
+        tester.rjp.get('/folder/chat', function(got, code){
+            test.equal(got.length, 1, '1 unread messages after');
+            test.done();
+        });
+    });
+};
+
