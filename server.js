@@ -362,16 +362,26 @@ function reply_message(req, res, auth) {
     });
 }
 
-function read_message(req, res, auth) {
-    var messages = req.body.messages;
-    var setmap = {};
-    map(messages, function(f,i,c){
+function read_list(req, res, auth, list) {
+    map(list, function(f,i,c){
         redis.hget(k_message(f), 'epoch', function(e, v){
             redis.zadd(k_user(auth, 'read'), v, f, c);
         });
     }, function(e, newlist) {
         var outlist = remove_undef(newlist);
         success(req, res, {count:outlist.length});
+    });
+}
+
+function read_messages(req, res, auth) {
+    var messages = req.body.messages;
+    read_list(req, res, auth, messages);
+}
+
+function read_thread(req, res, auth) {
+    var thread = req.body.thread;
+    redis.zrange(k_thread(thread), 0, -1, function(e,l){
+        read_list(req, res, auth, l);
     });
 }
 
@@ -625,6 +635,13 @@ function thread(app) {
     app.get('/:id', function(req, res, next) {
         json_thread(req, res, req.remoteUser);
     });
+    // POST
+    app.post('/read', function(req, res, next) {
+        read_thread(req, res, req.remoteUser);
+    });
+    app.post('/unread', function(req, res, next) {
+        unread_thread(req, res, req.remoteUser);
+    });
 }
 
 function message(app) {
@@ -634,7 +651,7 @@ function message(app) {
     });
     // POST
     app.post('/read', function(req, res, next) {
-        read_message(req, res, req.remoteUser);
+        read_messages(req, res, req.remoteUser);
     });
     app.post('/unread', function(req, res, next) {
         unread_message(req, res, req.remoteUser);
