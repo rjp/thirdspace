@@ -30,9 +30,9 @@ All folders you can access.
 You receive a list:
 
         [
-          { "folder":"General", "unread":1, "count":6 },
-          { "folder":"UA", "count":5 },
-          { "folder":"New-Confs", "unread":3, "count":4 },
+          { "folder":"General", "unread":1, "count":6, "subcribed":true },
+          { "folder":"UA", "count":5, "subcribed":false },
+          { "folder":"New-Confs", "unread":3, "count":4, "subcribed":true },
           ...
         ]
 
