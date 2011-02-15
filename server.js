@@ -181,7 +181,7 @@ function get_folder_unread(folder, user, callback) {
             if (unread_edit) { f = zdiffstore_withscores; }
             f(user, k_read, k_fold, true, function(e,v){
                 callback(undefined,
-                    {folder:folder, unread:v, count: c, sub: s});
+                {folder:folder, unread:v, count: c, subscribed: s?true:false});
             });
         });
     });
