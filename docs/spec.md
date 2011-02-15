@@ -162,7 +162,7 @@ Get messages in thread XYZ without bodies. Same response format as /folder/XYZ.
 
 Get messages in thread XYZ with bodies. Same return format as /folder/XYZ.
 
-## POST /thread/XYZ/read
+## POST /thread/XYZ/read &#x2713; (semi)
 
 Mark all messages in thread(s) as read.
 
