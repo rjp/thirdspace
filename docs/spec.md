@@ -135,7 +135,7 @@ You receive:
 
 to and subject default to the ones in XYZ. Attempts to change thread will be ignored.
 
-## POST /message/read
+## POST /message/read &#x2713;
 
 Mark message(s) as read.
 
@@ -150,7 +150,7 @@ You receive:
 count is the number of messages marked as read.
 *(what about "stay caught up"? - techno)*
 
-## POST /message/unread
+## POST /message/unread &#x2713;
 
 Mark message(s) as unread. Same format as /read.
 
@@ -162,7 +162,7 @@ Get messages in thread XYZ without bodies. Same response format as /folder/XYZ.
 
 Get messages in thread XYZ with bodies. Same return format as /folder/XYZ.
 
-## POST /thread/XYZ/read
+## POST /thread/XYZ/read &#x2713; (semi)
 
 Mark all messages in thread(s) as read.
 

@@ -362,6 +362,51 @@ function reply_message(req, res, auth) {
     });
 }
 
+function read_list(req, res, auth, list) {
+    map(list, function(f,i,c){
+        redis.hget(k_message(f), 'epoch', function(e, v){
+            redis.zadd(k_user(auth, 'read'), v, f, c);
+        });
+    }, function(e, newlist) {
+        var outlist = remove_undef(newlist);
+        success(req, res, {count:outlist.length});
+    });
+}
+
+function unread_list(req, res, auth, list) {
+    map(list, function(f,i,c){
+        redis.zrem(k_user(auth, 'read'), f, c);
+    }, function(e, newlist) {
+        var outlist = remove_undef(newlist);
+        success(req, res, {count:outlist.length});
+    });
+}
+
+function read_messages(req, res, auth) {
+    var messages = req.body.messages;
+    read_list(req, res, auth, messages);
+}
+
+function read_thread(req, res, auth) {
+    var thread = req.body.thread;
+    redis.zrange(k_thread(thread), 0, -1, function(e,l){
+        read_list(req, res, auth, l);
+    });
+}
+
+function unread_messages(req, res, auth) {
+    var messages = req.body.messages;
+    unread_list(req, res, auth, messages);
+}
+
+function unread_thread(req, res, auth) {
+    var thread = req.body.thread;
+    redis.zrange(k_thread(thread), 0, -1, function(e,l){
+        unread_list(req, res, auth, l);
+    });
+}
+
+
 function get_headers(f, c) {
     redis.hgetall(k_message(f), c);
 }
@@ -601,6 +646,13 @@ function thread(app) {
     app.get('/:id', function(req, res, next) {
         json_thread(req, res, req.remoteUser);
     });
+    // POST
+    app.post('/read', function(req, res, next) {
+        read_thread(req, res, req.remoteUser);
+    });
+    app.post('/unread', function(req, res, next) {
+        unread_thread(req, res, req.remoteUser);
+    });
 }
 
 function message(app) {
@@ -609,6 +661,12 @@ function message(app) {
         json_message(req, res, req.remoteUser);
     });
     // POST
+    app.post('/read', function(req, res, next) {
+        read_messages(req, res, req.remoteUser);
+    });
+    app.post('/unread', function(req, res, next) {
+        unread_messages(req, res, req.remoteUser);
+    });
     app.post('/:id', function(req, res, next) {
         reply_message(req, res, req.remoteUser);
     });
