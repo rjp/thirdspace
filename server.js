@@ -373,6 +373,15 @@ function read_list(req, res, auth, list) {
     });
 }
 
+function unread_list(req, res, auth, list) {
+    map(list, function(f,i,c){
+        redis.zrem(k_user(auth, 'read'), f, c);
+    }, function(e, newlist) {
+        var outlist = remove_undef(newlist);
+        success(req, res, {count:outlist.length});
+    });
+}
+
 function read_messages(req, res, auth) {
     var messages = req.body.messages;
     read_list(req, res, auth, messages);
@@ -385,16 +394,18 @@ function read_thread(req, res, auth) {
     });
 }
 
-function unread_message(req, res, auth) {
+function unread_messages(req, res, auth) {
     var messages = req.body.messages;
-    var setmap = {};
-    map(messages, function(f,i,c){
-        redis.zrem(k_user(auth, 'read'), f, c);
-    }, function(e, newlist) {
-        var outlist = remove_undef(newlist);
-        success(req, res, {count:outlist.length});
+    unread_list(req, res, auth, messages);
+}
+
+function unread_thread(req, res, auth) {
+    var thread = req.body.thread;
+    redis.zrange(k_thread(thread), 0, -1, function(e,l){
+        unread_list(req, res, auth, l);
     });
 }
+
 
 function get_headers(f, c) {
     redis.hgetall(k_message(f), c);
@@ -654,7 +665,7 @@ function message(app) {
         read_messages(req, res, req.remoteUser);
     });
     app.post('/unread', function(req, res, next) {
-        unread_message(req, res, req.remoteUser);
+        unread_messages(req, res, req.remoteUser);
     });
     app.post('/:id', function(req, res, next) {
         reply_message(req, res, req.remoteUser);
