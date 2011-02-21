@@ -4,13 +4,18 @@ var connect = require('./connect/lib/connect/index');
 var redisFactory = require('./redis-node/lib/redis');
 var Log = require('./log.js/'), log = new Log(Log.WARNING);
 
+var config = {"port":3000,"redisport":6379, "redisdb":2};
+
 // nice to have configuration in a distinct place
-var config;
+var new_config;
 try {
     var config_json = fs.readFileSync(process.argv[2], 'utf8');
-    config = JSON.parse(config_json);
+    new_config = JSON.parse(config_json);
 } catch(e) {
-    config = {"port":3000,"redisport":6379, "redisdb":2};
+    new_config = {};
+}
+for(var i in new_config) {
+    config[i] = new_config[i];
 }
 
 if (process.env.redisport !== undefined) {
