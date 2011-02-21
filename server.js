@@ -196,6 +196,10 @@ function json_folder(req, res, auth) {
     var folder = req.params.name;
     var unread_edit = req.params.extra;
     var retval = {};
+    var fetcher = get_headers;
+
+    if (unread_edit === 'full') { fetcher = get_full; }
+
     redis.exists(k_folder(folder), function(e, v){
         if(!v) {
             error(req, res, "No such folder:"+folder, 404);
@@ -212,7 +216,7 @@ function json_folder(req, res, auth) {
             f(auth, k_read, k_fold, false, function(e,s){
                 retval['ids'] = s;
                 map(s, function(f,i,c) {
-                    redis.hgetall(k_message(f), c);
+                    fetcher(f, c);
                 }, function(e, newlist) {
                     retval['messages'] = newlist;
                     res.writeHead(200, {'Content-Type':'application/json'});
