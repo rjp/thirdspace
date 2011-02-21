@@ -1,5 +1,7 @@
 *This document is intended for guidance only and the functionality described in no way represents a binding contract. Details are subject to alteration and correction without notice.*
 
+NB: &#x2713; means "implemented according to this spec in ThirdSpace"
+
 UA3 Spec
 ========
 
@@ -91,7 +93,8 @@ inReplyTo contains the message ID of the immediate parent.
 
 Unread messages in folder XYZ without bodies. Same response format as /folder/XYZ.
 
-## GET /folder/XYZ/full
+## GET /folder/XYZ/full &#x2713;
+
 
 All non-expired messages in folder XYZ with bodies.
 
