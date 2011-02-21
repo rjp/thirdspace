@@ -24,17 +24,22 @@ var m = {
 };
 
 var expected = [];
+var with_bodies = [];
+
 for (var u in m) {
     for (var f in m[u]) {
         for (var mn in m[u][f]) {
             var k = m[u][f][mn];
             if (expected[u] == undefined) { expected[u] = []; }
             if (expected[u][f] == undefined) { expected[u][f] = []; }
-            var o = {};
+            if (with_bodies[u] == undefined) { with_bodies[u] = []; }
+            if (with_bodies[u][f] == undefined) { with_bodies[u][f] = []; }
+            var o = {}; var p = {};
             var source = testdata.json.preload[k];
-            for (var i in source) { o[i] = source[i]; }
+            for (var i in source) { o[i] = source[i]; p[i] = source[i]; }
             delete o['body'];
             expected[u][f].push(o);
+            with_bodies[u][f].push(p);
         }
     }
 };
@@ -53,6 +58,20 @@ function make_test(folder, who, wanted) {
     }
 }
 
+function make_test_full(folder, who, wanted) {
+    var e = [];
+    if (expected[who] != undefined && expected[who][folder] != undefined) {
+        e = with_bodies[who][folder];
+    }
+    return function(test) {
+	    tester[who].get('/folder/'+folder+'/full', function(got){
+	        test.expect(1);
+	        test.deepEqual(got, e, "folder/full "+folder+", "+who);
+	        test.done();
+	    });
+    }
+}
+
 var fred = testdata.json.folders.t01;
 var users = ['rjp', 'techno', 'lurker'];
 var folders = ['chat', 'mine', 'test'];
@@ -63,6 +82,7 @@ for(var i in folders) {
         var u = users[j];
         sys.puts("making test for "+f+", "+u);
         exports['folder-'+f+'-'+u] = make_test(f, u, fred[u][f]);
+        exports['folder-full-'+f+'-'+u] = make_test_full(f, u, fred[u][f]);
     }
 }
 
