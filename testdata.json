@@ -72,36 +72,36 @@
     "folders": {
         "t00": {
             "rjp": [
-                {"folder":"chat","unread":3,"count":5,"sub":1},
-                {"folder":"mine","unread":1,"count":2,"sub":1},
-                {"folder":"test","unread":3,"count":3,"sub":0}
+                {"folder":"chat","unread":3,"count":5,"subscribed":1},
+                {"folder":"mine","unread":1,"count":2,"subscribed":1},
+                {"folder":"test","unread":3,"count":3,"subscribed":0}
             ],
             "techno": [ 
-                {"folder":"chat","unread":3,"count":5,"sub":1},
-                {"folder":"mine","unread":2,"count":2,"sub":0},
-                {"folder":"test","unread":3,"count":3,"sub":0}
+                {"folder":"chat","unread":3,"count":5,"subscribed":1},
+                {"folder":"mine","unread":2,"count":2,"subscribed":0},
+                {"folder":"test","unread":3,"count":3,"subscribed":0}
             ],
             "lurker": [
-                {"folder":"chat","unread":5,"count":5,"sub":0},
-                {"folder":"mine","unread":2,"count":2,"sub":0},
-                {"folder":"test","unread":3,"count":3,"sub":0}
+                {"folder":"chat","unread":5,"count":5,"subscribed":0},
+                {"folder":"mine","unread":2,"count":2,"subscribed":0},
+                {"folder":"test","unread":3,"count":3,"subscribed":0}
             ]
         },
         "t01": {
             "rjp": {
-                "chat": {"folder":"chat","unread":3,"count":5,"sub":1},
-                "mine": {"folder":"mine","unread":1,"count":2,"sub":1},
-                "test": {"folder":"test","unread":3,"count":3,"sub":0}
+                "chat": {"folder":"chat","unread":3,"count":5,"subscribed":1},
+                "mine": {"folder":"mine","unread":1,"count":2,"subscribed":1},
+                "test": {"folder":"test","unread":3,"count":3,"subscribed":0}
             },
             "techno": {
-                "chat": {"folder":"chat","unread":3,"count":5,"sub":1},
-                "mine": {"folder":"mine","unread":2,"count":2,"sub":0},
-                "test": {"folder":"test","unread":3,"count":3,"sub":0}
+                "chat": {"folder":"chat","unread":3,"count":5,"subscribed":1},
+                "mine": {"folder":"mine","unread":2,"count":2,"subscribed":0},
+                "test": {"folder":"test","unread":3,"count":3,"subscribed":0}
             },
             "lurker": {
-                "chat": {"folder":"chat","unread":5,"count":5,"sub":0},
-                "mine": {"folder":"mine","unread":2,"count":2,"sub":0},
-                "test": {"folder":"test","unread":3,"count":3,"sub":0}
+                "chat": {"folder":"chat","unread":5,"count":5,"subscribed":0},
+                "mine": {"folder":"mine","unread":2,"count":2,"subscribed":0},
+                "test": {"folder":"test","unread":3,"count":3,"subscribed":0}
             }
         }
     },

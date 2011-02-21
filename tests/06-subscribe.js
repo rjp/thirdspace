@@ -23,7 +23,7 @@ exports['subscribe-test'] = function(test){
         // folders + test but that's tricky given we get a list back from
         // /folders and deepEqual can't compare differently sorted lists
         tester.rjp.get('/folderinfo/test', function(got, code){
-            test.equal(got.sub, 1, 'subscribed ok?');
+            test.equal(got.subscribed, 1, 'subscribed ok?');
             test.done();
         });
     });
@@ -35,7 +35,7 @@ exports['unsubscribe-test'] = function(test){
         test.equal(code, 200, '200 OK');
         test.deepEqual(got, {"folder":"test"}, "Folder TEST");
         tester.rjp.get('/folderinfo/test', function(got, code){
-            test.equal(got.sub, 0, 'subscribed ok?');
+            test.equal(got.subscribed, 0, 'subscribed ok?');
             test.done();
         });
     });
