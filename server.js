@@ -45,14 +45,18 @@ function remove_undef(list) {
 function authenticate(user, pass, success, failure) {
     log.info('pass is '+pass);
     log.info('getting the key auth:'+user);
-    redis.get('auth:'+user, function(err, result) {
-        var real_pass = result.toString('utf8');
-        log.info('real pass is '+real_pass);
-        if (pass == real_pass) {
-            log.info('AUTHENTICATED, PROCEEDING');
-            success();
-        } else {
+    redis.hgetall('userinfo:'+user, function(err, result) {
+        if (result === undefined || result === null) {
             failure();
+        } else {
+	        var real_pass = result.pass.toString('utf8');
+	        log.info('real pass is '+real_pass);
+	        if (pass == real_pass) {
+	            log.info('AUTHENTICATED, PROCEEDING');
+	            success(result);
+	        } else {
+	            failure();
+	        }
         }
     });
 }
