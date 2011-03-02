@@ -22,6 +22,11 @@ if (process.env.redisport !== undefined) {
     config.redisport = parseInt(process.env.redisport, 10);
 }
 
+if (process.env.redisdb !== undefined) {
+    config.redisdb = parseInt(process.env.redisdb, 10);
+}
+
+
 sys.puts(sys.inspect(config));
 
 var redis = redisFactory.createClient(config.redisport);
@@ -131,7 +136,7 @@ function map(list, each_callback, final_callback) {
 }
 
 function canon_user(username) {
-    return username.toLowerCase().replace(/[^a-z0-9]/, '_');
+    return username.toLowerCase().replace(/[^-a-z0-9]/, '_');
 }
 
 function k_user(username, subkey) {
@@ -139,7 +144,7 @@ function k_user(username, subkey) {
 }
 
 function canon_folder(foldername) {
-    return foldername.toLowerCase().replace(/[^a-z0-9]/, '_');
+    return foldername.toLowerCase().replace(/[^-a-z0-9]/, '_');
 }
 
 function k_folder(foldername) {
