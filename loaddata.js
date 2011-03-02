@@ -84,7 +84,7 @@ function load_data() { // actually load the data
     // load authentication data
     for(var i in extra_data.auth) {
         if (extra_data.auth.hasOwnProperty(i)) {
-            redis.set('auth:'+i, extra_data.auth[i], null_cb);
+            redis.hset('userinfo:'+i, 'pass', extra_data.auth[i], null_cb);
         }
     }
 
