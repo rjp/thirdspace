@@ -505,7 +505,9 @@ function json_message(req, res, auth) {
                            var y = s.splice(0,2);
                            x.push({id:y[0], folder:y[1]});
                         }
-                        v.inReplyToHierarchy = x;
+                        if (x.length > 0) {
+                            v.inReplyToHierarchy = x;
+                        }
                         res.writeHead(200, {'Content-Type':'application/json'});
                         res.end(JSON.stringify(v));
                     });
