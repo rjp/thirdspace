@@ -213,7 +213,7 @@ function json_folder(req, res, auth) {
     var f_all = false;
 
     if (unread_edit === 'full') { fetcher = get_full; }
-    if (unread_edit.match(/\ball\b/)) { f_all = true; }
+    if (unread_edit && unread_edit.match(/\ball\b/)) { f_all = true; }
 
     redis.exists(k_folder(folder), function(e, v){
         if(!v) {
