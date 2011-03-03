@@ -30,7 +30,6 @@ if (process.env.redisdb !== undefined) {
     config.redisdb = parseInt(process.env.redisdb, 10);
 }
 
-
 sys.puts(sys.inspect(config));
 
 var redis = redisFactory.createClient(config.redisport);
@@ -44,6 +43,73 @@ function remove_undef(list) {
     }
     return outlist;
 }
+
+function folders_unread(req, res, user) {
+    var flag_unread = req.params.extra;
+    var s_one = k_user(user, 'read');
+    var s_two = 'all:messages';
+    var inter = 'inter:' + user + ':' + s_one + ':zdiff:' + s_two;
+    var finish = 'final:' + user + ':' + s_one + ':zdiff:' + s_two;
+    var w1 = {}; w1[s_one] = 1; w1[s_two] = -1;
+    var w2 = {}; w2[inter] = 1; w2[s_two] = 1;
+    var folders = {};
+    redis.zunionstore(inter, w1, 'sum', function(e, s) {
+        if (e) { throw(e); }
+        redis.zremrangebyscore(inter, 0, '+inf', function(e, s) {
+            if (e) { throw(e); }
+            redis.zinterstore(finish, w2, 'max', function(e, s) {
+                if (e) { throw(e); }
+                redis.sort(finish, {get: ['message:*->folder']}, function(e,fl){
+                    for (var i in fl) {
+                        if (fl.hasOwnProperty(i)) {
+                            var j = canon_folder(fl[i]);
+                            if (folders[j] == undefined) {
+                                folders[j] = 0;
+                            }
+                            folders[j] = folders[j] + 1;
+                        }
+                    }
+                    var folder_list = [];
+                    redis.keys("folder:*", function(err, subs) {
+	                    for (var i in subs) {
+                            var f = subs[i].substr(7);
+	                        var x = {'folder':canon_folder(f), 'unread': 0};
+	                        if (folders.hasOwnProperty(f)) {
+	                            x.unread = folders[f];
+	                        }
+                            if (flag_unread) {
+                                if (x.unread > 0) {
+                                    folder_list.push(x);
+                                }
+                            } else {
+                                folder_list.push(x);
+                            }
+	                    }
+	                    map(folder_list, function(f,i,c){
+	                        redis.sismember(k_user(user, 'subs'), canon_folder(f.folder), function(e, s) {
+	                            f.subscribed = s ? true : false;
+	                            redis.zcard(k_folder(f.folder), function(e,x){
+	                                f.count = x;
+	                                c(undefined, f);
+	                            });
+	                        });
+	                    }, function(e, newlist) {
+	                        newlist.sort(function(a,b){
+	                            if (a.folder > b.folder) { return +1; }
+	                            if (a.folder < b.folder) { return -1; }
+	                            return 0;
+	                        });
+		                    res.writeHead(200, {'Content-Type':'application/json'});
+		                    res.end(JSON.stringify(newlist));
+	                    });
+                    });
+                });
+            });
+        });
+    });
+}
+
+
 
 // this should probably be smarter
 function authenticate(user, pass, success, failure) {
@@ -677,6 +743,12 @@ function folder(app) {
 function folders(app) {
     app.get('/', function(req, res, next){
         json_folders(req, res, req.remoteUser);
+    });
+    app.get('/new', function(req, res, next){
+        folders_unread(req, res, req.remoteUser);
+    });
+    app.get('/new/:extra', function(req, res, next){
+        folders_unread(req, res, req.remoteUser);
     });
     app.get('/:extra', function(req, res, next){
         json_folders(req, res, req.remoteUser);
