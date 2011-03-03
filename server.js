@@ -18,6 +18,10 @@ for(var i in new_config) {
     config[i] = new_config[i];
 }
 
+if (process.env.httpport !== undefined) {
+    config.port = parseInt(process.env.httpport, 10);
+}
+
 if (process.env.redisport !== undefined) {
     config.redisport = parseInt(process.env.redisport, 10);
 }
@@ -49,14 +53,14 @@ function authenticate(user, pass, success, failure) {
         if (result === undefined || result === null) {
             failure();
         } else {
-	        var real_pass = result.pass.toString('utf8');
-	        log.info('real pass is '+real_pass);
-	        if (pass == real_pass) {
-	            log.info('AUTHENTICATED, PROCEEDING');
-	            success(result);
-	        } else {
-	            failure();
-	        }
+            var real_pass = result.pass.toString('utf8');
+            log.info('real pass is '+real_pass);
+            if (pass == real_pass) {
+                log.info('AUTHENTICATED, PROCEEDING');
+                success(result);
+            } else {
+                failure();
+            }
         }
     });
 }
@@ -206,8 +210,10 @@ function json_folder(req, res, auth) {
     var unread_edit = req.params.extra;
     var retval = {};
     var fetcher = get_headers;
+    var f_all = false;
 
     if (unread_edit === 'full') { fetcher = get_full; }
+    if (unread_edit.match(/\ball\b/)) { f_all = true; }
 
     redis.exists(k_folder(folder), function(e, v){
         if(!v) {
@@ -222,6 +228,9 @@ function json_folder(req, res, auth) {
             retval['subscribed'] = s ? 'true' : 'false';
             var f = zdiffstore_noscores;
             if (unread_edit) { f = zdiffstore_withscores; }
+
+            // f_all signifies we should ignore the read list and return all
+//            if (f_all) { f = zunionstore; }
             f(auth, k_read, k_fold, false, function(e,s){
                 retval['ids'] = s;
                 map(s, function(f,i,c) {
@@ -387,7 +396,10 @@ function read_list(req, res, auth, list) {
         });
     }, function(e, newlist) {
         var outlist = remove_undef(newlist);
-        success(req, res, {count:outlist.length});
+        redis.zrangebyscore(k_user(auth,'read'), -1, -1, function(e, v){
+            redis.hset('userinfo:'+auth, 'lastread', v, function(){});
+            success(req, res, {count:outlist.length});
+        });
     });
 }
 
@@ -401,7 +413,7 @@ function unread_list(req, res, auth, list) {
 }
 
 function read_messages(req, res, auth) {
-    var messages = req.body.messages;
+    var messages = req.body;
     read_list(req, res, auth, messages);
 }
 
@@ -477,15 +489,28 @@ function json_message(req, res, auth) {
         if (v === null) {
             error(req, res, "Message "+id+" not found", 404);
         } else {
-	        redis.get(k_bid, function(e, b) {
-	            if (e) { error(req, res, "Exception:"+e, 500); }
-	            if (v.id === undefined || v.id !== id) {
-	                error(req, res, "No such message:"+id, 404);
-	            }
-	            v.body = b;
-	            res.writeHead(200, {'Content-Type':'application/json'});
-	            res.end(JSON.stringify(v));
-	        });
+            redis.get(k_bid, function(e, b) {
+                if (e) { error(req, res, "Exception:"+e, 500); }
+                if (v.id === undefined || v.id !== id) {
+                    error(req, res, "No such message:"+id, 404);
+                }
+                v.body = b;
+                redis.zscore(k_user(auth,'read'), id, function(e,s){
+                    if (s != undefined && s <= v.epoch) {
+                        v.read = true;
+                    }
+                    redis.sort('parents:'+id, {order:'desc', get:['#','message:*->folder']}, function(e,s){
+                        var x = [];
+                        while (s.length > 0) {
+                           var y = s.splice(0,2);
+                           x.push({id:y[0], folder:y[1]});
+                        }
+                        v.inReplyToHierarchy = x;
+                        res.writeHead(200, {'Content-Type':'application/json'});
+                        res.end(JSON.stringify(v));
+                    });
+                });
+            });
         }
     });
 }
@@ -522,14 +547,14 @@ function post_folder(req, res, auth) {
                         if(e) { error(req, res, "could not add folder", 500); }
                         redis.zadd(k_thread(thread_id), h_message.epoch, message_id, function(e, v){
                             if(e) { error(req, res, "could not add thread", 500); }
-	                        var retval = {
-	                            id: message_id, thread: thread_id,
-	                            folder: folder, epoch: epoch
-	                        };
-	                        log.info("new body stored "+message_id);
-	                        res.writeHead(200, {'Content-Type':'application/json'});
-	                        res.end(JSON.stringify(retval));
-	                    });
+                            var retval = {
+                                id: message_id, thread: thread_id,
+                                folder: folder, epoch: epoch
+                            };
+                            log.info("new body stored "+message_id);
+                            res.writeHead(200, {'Content-Type':'application/json'});
+                            res.end(JSON.stringify(retval));
+                        });
                     });
                 });
             });
@@ -569,13 +594,13 @@ function annotate_message(req, res, auth) {
             if (h.anno_from != undefined) {
                 ar(req, res, 401, "Cannot double-annotate "+id);
             } else {
-	            redis.hmset(k_message(id), {'epoch':epoch,'anno_from':annotate}, function(e,s){
-	                if (e) { throw(e); }
-	                redis.zadd(k_folder(h.folder), epoch, id, function(e,s){
-	                    if (e) { throw(e); }
-	                    ar(req, res, 200, {"annotated":id,"anno_from":true,"by":auth});
-	                });
-	            });
+                redis.hmset(k_message(id), {'epoch':epoch,'anno_from':annotate}, function(e,s){
+                    if (e) { throw(e); }
+                    redis.zadd(k_folder(h.folder), epoch, id, function(e,s){
+                        if (e) { throw(e); }
+                        ar(req, res, 200, {"annotated":id,"anno_from":true,"by":auth});
+                    });
+                });
             }
         }
 
@@ -584,13 +609,13 @@ function annotate_message(req, res, auth) {
             if (h.anno_to != undefined) {
                 ar(req, res, 401, "Cannot double-annotate "+id);
             } else {
-	            redis.hmset(k_message(id), {'epoch':epoch,'anno_to':annotate}, function(e,s){
-	                if (e) { throw(e); }
-	                redis.zadd(k_folder(h.folder), epoch, id, function(e,s){
-	                    if (e) { throw(e); }
-	                    ar(req, res, 200, {"annotated":id,"anno_to":true,"by":auth});
-	                });
-	            });
+                redis.hmset(k_message(id), {'epoch':epoch,'anno_to':annotate}, function(e,s){
+                    if (e) { throw(e); }
+                    redis.zadd(k_folder(h.folder), epoch, id, function(e,s){
+                        if (e) { throw(e); }
+                        ar(req, res, 200, {"annotated":id,"anno_to":true,"by":auth});
+                    });
+                });
             }
         }
     });
