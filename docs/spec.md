@@ -118,7 +118,7 @@ Get single message XYZ.
 
 You receive:
 
-        { "folder":"UA-Dev", "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874, "body":"Hmmm, yes. One of the server's two nameservers is down." }
+        { "folder":"UA-Dev", "id":2000881, "epoch":1289914759, "from":"BW", "to":"Isvara", "subject":"DNS", "inReplyTo":2000874, "body":"Hmmm, yes. One of the server's two nameservers is down.", "client":"quackjson v0.1" }
 
 ## POST /message/XYZ &#x2713;
 
